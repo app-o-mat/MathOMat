@@ -1,0 +1,10 @@
+identifier_name:
+  excluded:
+    - km
+    - i
+
+disabled_rules:
+  - trailing_comma
+
+excluded:
+  - Carthage
