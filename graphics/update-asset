@@ -1,0 +1,6 @@
+cp appicon-* ../MathOMat/Assets.xcassets/AppIcon.appiconset/
+cp appicon-58-0.png ../MathOMat/Assets.xcassets/AppIcon.appiconset/appicon-58-1.png 
+cp appicon-80-0.png ../MathOMat/Assets.xcassets/AppIcon.appiconset/appicon-80-1.png 
+cp appicon-120-0.png ../MathOMat/Assets.xcassets/AppIcon.appiconset/appicon-120-1.png 
+cp appicon-40-0.png ../MathOMat/Assets.xcassets/AppIcon.appiconset/appicon-40-1.png 
+cp appicon-40-0.png ../MathOMat/Assets.xcassets/AppIcon.appiconset/appicon-40-2.png 
