@@ -72,15 +72,17 @@ class MathPongScene: SKScene {
 
     func createProblem() {
         let label = SKLabelNode(text: self.currentProblem.question)
+        label.fontSize = self.size.height / 20
 
         let problemSize = label.frame.size
-        let problem = SKSpriteNode(color: UIColor.blue, size: problemSize)
+        let problem = SKShapeNode(rectOf: problemSize)
         self.problem = problem
         addChild(problem)
 
+        problem.fillColor = UIColor.clear
+        problem.strokeColor = UIColor.clear
         problem.name = Constants.problemName
         problem.position = CGPoint(x: self.size.width / 2, y: self.size.height / 2)
-        problem.zRotation = players[currentPlayer].problemRotation
 
         let physicsBody = SKPhysicsBody(
             rectangleOf: CGSize(width: problemSize.width, height: problemSize.height))
@@ -88,6 +90,7 @@ class MathPongScene: SKScene {
         physicsBody.usesPreciseCollisionDetection = true
         physicsBody.linearDamping = 0.0
         physicsBody.contactTestBitMask = physicsBody.collisionBitMask
+        physicsBody.allowsRotation = false
         problem.physicsBody = physicsBody
 
         problem.addChild(label)
