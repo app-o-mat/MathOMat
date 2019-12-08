@@ -7,12 +7,13 @@
 //
 
 import Foundation
+import GameplayKit
 
 struct MathPongProblem {
     let question: String
     let answer: String
 
-    let wrongAnswers: [String]
+    let wrongAnswers: Set<String>
 }
 
 protocol MathPongGameData {
@@ -21,14 +22,19 @@ protocol MathPongGameData {
 
 class MultiplicationData: MathPongGameData {
 
-    let problems = [
-        ("5 x 7", "35", ["33", "38", "30", "45", "57"]),
-        ("3 x 8", "24", ["38", "26", "20", "21", "27"]),
-    ].map { MathPongProblem(question: $0.0, answer: $0.1, wrongAnswers: $0.2) }
-    var currentProblemIndex = 0
-
     func getNextProblem() -> MathPongProblem {
-        defer { currentProblemIndex = (currentProblemIndex + 1) % problems.count }
-        return problems[currentProblemIndex]
+        let mult1 = GKRandomSource.sharedRandom().nextInt(upperBound: 10) + 2
+        let mult2 = GKRandomSource.sharedRandom().nextInt(upperBound: 10) + 2
+
+        let answer = mult1 * mult2
+        var wrongAnswers = [
+            "\(answer + 1)", "\(answer + 1)", "\(answer + mult1)", "\(answer + mult2)",
+            "\(answer - mult1)", "\(answer - mult2)", "\(mult1)\(mult2)", "\(mult1 + mult2)",
+        ]
+        if mult1 + mult2 != answer {
+            wrongAnswers.append("\(mult1 + mult2)")
+        }
+        return MathPongProblem(question: "\(mult1) x \(mult2)", answer: "\(mult1 * mult2)",
+            wrongAnswers: Set(wrongAnswers))
     }
 }
