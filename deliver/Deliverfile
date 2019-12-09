@@ -1,0 +1,8 @@
+###################### More Options ######################
+# If you want to have even more control, check out the documentation
+# https://github.com/fastlane/fastlane/blob/master/deliver/Deliverfile.md
+
+app_identifier "com.app-o-mat.MathOMat" # The bundle identifier of your app
+username "lfranco@greenwave-solutions.com" # your Apple ID user
+team_id "159005"
+

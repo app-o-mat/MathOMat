@@ -39,6 +39,8 @@ fastlane/report.xml
 fastlane/README.md
 fastlane/test_output
 
+deliver/Preview.html
+
 # Carthage
 Carthage/Checkouts
 
