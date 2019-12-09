@@ -27,6 +27,14 @@ class MathPongScene: SKScene {
         static let lineOffset: CGFloat = 150
     }
 
+    enum GameState {
+        case waitingToStart
+        case running
+        case gameOver
+    }
+
+    var gameState = GameState.waitingToStart
+
     init(size: CGSize, data: MathPongGameData) {
         self.data = data
         self.currentProblem = self.data.getNextProblem()
@@ -38,7 +46,6 @@ class MathPongScene: SKScene {
 
     override func didMove(to view: SKView) {
         createGameBoard()
-        createProblem()
         physicsWorld.contactDelegate = self
     }
 
@@ -51,7 +58,21 @@ class MathPongScene: SKScene {
         createGameBoundary(xPosition: 0)
         createGameBoundary(xPosition: self.size.width)
 
+        let startButton = MathPongButtonNode(
+            color: UIColor(hue: 0.5, saturation: 0.75, brightness: 0.2, alpha: 1.0),
+            size: CGSize(width: 200, height: 75))
+        addChild(startButton)
+        startButton.text = "Start"
+        startButton.position = CGPoint(x: self.size.width / 2, y: self.size.height / 2)
+        startButton.onTap = { [weak self] button in
+            button.removeFromParent()
+            self?.createRunningGameBoard()
+        }
+    }
+
+    func createRunningGameBoard() {
         createButtons()
+        createProblem()
     }
 
     func createPlayerLine(yPosition: CGFloat, playerIndex: Int) {

@@ -9,9 +9,10 @@
 import Foundation
 import SpriteKit
 
-class AnswerButtonNode: SKSpriteNode {
+class MathPongButtonNode: SKSpriteNode {
     private let labelNode = SKLabelNode()
     private let flipped: Bool
+    var onTap: ((MathPongButtonNode) -> Void)?
 
     public var text: String? {
         get { return labelNode.text }
@@ -21,9 +22,10 @@ class AnswerButtonNode: SKSpriteNode {
         }
 
     }
-    init(color: UIColor, size: CGSize, flipped: Bool) {
+    init(color: UIColor, size: CGSize, flipped: Bool = false) {
         self.flipped = flipped
         super.init(texture: nil, color: color, size: size)
+        self.isUserInteractionEnabled = true
         addChild(labelNode)
         labelNode.fontSize = size.height * 0.8
         if flipped {
@@ -40,5 +42,9 @@ class AnswerButtonNode: SKSpriteNode {
         } else {
             labelNode.position = CGPoint(x: 0, y: -(labelNode.frame.size.height) / 2.0)
         }
+    }
+
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        self.onTap?(self)
     }
 }

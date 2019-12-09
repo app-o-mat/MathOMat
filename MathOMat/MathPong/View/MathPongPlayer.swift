@@ -38,7 +38,7 @@ class MathPongPlayer {
         return hues[currentHue]
     }
 
-    var buttons = [AnswerButtonNode]()
+    var buttons = [MathPongButtonNode]()
     let buttonWidth: CGFloat = 100.0
 
     init(problemRotation: CGFloat, position: PlayerPosition) {
@@ -46,8 +46,8 @@ class MathPongPlayer {
         self.position = position
     }
 
-    func addButton(scene: SKScene, xPos: CGFloat, text: String, lineOffset: CGFloat) -> AnswerButtonNode {
-        let button = AnswerButtonNode(
+    func addButton(scene: SKScene, xPos: CGFloat, text: String, lineOffset: CGFloat) -> MathPongButtonNode {
+        let button = MathPongButtonNode(
             color: UIColor.init(
                 hue: nextHue(),
                 saturation: 0.75, brightness: 0.5, alpha: 1.0),
