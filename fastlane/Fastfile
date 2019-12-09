@@ -1,0 +1,34 @@
+lane :build_appstore do
+  xcversion(version: "11.2.1")
+
+  gym(
+    scheme: "MathOMat",
+    configuration: "Release",
+    output_directory: "./build/app-store",
+    clean: true,
+    export_options: "./config/AppStoreConfiguration.plist",
+    output_name: "Math-o-Mat.ipa"
+  )
+
+end
+
+lane :build_adhoc do
+  xcversion(version: "11.2.1")
+
+  gym(
+    scheme: "MathOMat",
+    configuration: "Release",
+    output_directory: "./build/ad-hoc",
+    clean: true,
+    export_options: "./config/AdHocConfiguration.plist",
+    output_name: "Math-o-Mat.ipa"
+  )
+
+end
+
+lane :unit_tests do
+  xcversion(version: "11.2.1")
+
+  run_tests(scheme: "MathOMat")
+
+end
