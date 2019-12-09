@@ -47,6 +47,9 @@ class MathPongScene: SKScene {
         super.init(size: size)
     }
 
+    let winSoundAction = SKAction.playSoundFileNamed("win", waitForCompletion: false)
+    let loseSoundAction = SKAction.playSoundFileNamed("lose", waitForCompletion: false)
+
     @available(*, unavailable)
     required init?(coder aDecoder: NSCoder) { fatalError("init(coder:) has not been implemented") }
 
@@ -159,17 +162,19 @@ class MathPongScene: SKScene {
 
         buttons[0].onTap = { [weak self] button in
             guard let sself = self, let velocity = sself.problem?.physicsBody?.velocity else { return }
-            sself.run(SKAction.playSoundFileNamed("win", waitForCompletion: false))
+            sself.run(sself.winSoundAction)
             sself.currentPlayer = 1 - sself.currentPlayer
             sself.problem?.physicsBody?.velocity = CGVector(dx: velocity.dx, dy: -velocity.dy)
             sself.currentProblem = sself.data.getNextProblem()
         }
 
-        buttons[1].onTap = { button in
-            self.run(SKAction.playSoundFileNamed("lose", waitForCompletion: false))
+        buttons[1].onTap = { [weak self] button in
+            guard let sself = self else { return }
+            sself.run(sself.loseSoundAction)
         }
-        buttons[2].onTap = { button in
-            self.run(SKAction.playSoundFileNamed("lose", waitForCompletion: true))
+        buttons[2].onTap = { [weak self] button in
+            guard let sself = self else { return }
+            sself.run(sself.loseSoundAction)
         }
     }
 
@@ -224,10 +229,10 @@ extension MathPongScene: SKPhysicsContactDelegate {
         guard node(named: Constants.problemName, contact: contact) != nil else { return }
         if node(named: Constants.playerLineName[0], contact: contact) != nil {
             self.currentPlayer = 1
-            self.run(SKAction.playSoundFileNamed("lose", waitForCompletion: false))
+            self.run(self.loseSoundAction)
         } else if node(named: Constants.playerLineName[1], contact: contact) != nil {
             self.currentPlayer = 0
-            self.run(SKAction.playSoundFileNamed("lose", waitForCompletion: false))
+            self.run(self.loseSoundAction)
         } else {
             if node(named: Constants.buttonLineName[currentPlayer], contact: contact) != nil {
                 createButtons()
