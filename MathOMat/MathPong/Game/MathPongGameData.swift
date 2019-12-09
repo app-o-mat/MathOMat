@@ -29,7 +29,7 @@ class MultiplicationData: MathPongGameData {
         let answer = mult1 * mult2
         var wrongAnswers = [
             "\(answer + 1)", "\(answer + 1)", "\(answer + mult1)", "\(answer + mult2)",
-            "\(answer - mult1)", "\(answer - mult2)", "\(mult1)\(mult2)", "\(mult1 + mult2)",
+            "\(answer - mult1)", "\(answer - mult2)",
         ]
         if mult1 + mult2 != answer {
             wrongAnswers.append("\(mult1 + mult2)")
