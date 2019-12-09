@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		9A0A4BEA239DE2400062F5BE /* win.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 9A0A4BE9239DE2400062F5BE /* win.mp3 */; };
+		9A0A4BEC239DE29A0062F5BE /* lose.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 9A0A4BEB239DE29A0062F5BE /* lose.mp3 */; };
 		9A3F957F239D416700A349D2 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A3F957E239D416700A349D2 /* AppDelegate.swift */; };
 		9A3F9585239D416700A349D2 /* MathPongScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A3F9584239D416700A349D2 /* MathPongScene.swift */; };
 		9A3F9587239D416700A349D2 /* MathPongSceneViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A3F9586239D416700A349D2 /* MathPongSceneViewController.swift */; };
@@ -30,6 +32,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		9A0A4BE9239DE2400062F5BE /* win.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = win.mp3; sourceTree = "<group>"; };
+		9A0A4BEB239DE29A0062F5BE /* lose.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = lose.mp3; sourceTree = "<group>"; };
 		9A3F957B239D416700A349D2 /* MathOMat.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MathOMat.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9A3F957E239D416700A349D2 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		9A3F9584239D416700A349D2 /* MathPongScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MathPongScene.swift; sourceTree = "<group>"; };
@@ -64,6 +68,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		9A0A4BE8239DE21D0062F5BE /* Sounds */ = {
+			isa = PBXGroup;
+			children = (
+				9A0A4BEB239DE29A0062F5BE /* lose.mp3 */,
+				9A0A4BE9239DE2400062F5BE /* win.mp3 */,
+			);
+			path = Sounds;
+			sourceTree = "<group>";
+		};
 		9A3F9572239D416700A349D2 = {
 			isa = PBXGroup;
 			children = (
@@ -107,6 +120,7 @@
 		9A3F95A4239D428800A349D2 /* MathPong */ = {
 			isa = PBXGroup;
 			children = (
+				9A0A4BE8239DE21D0062F5BE /* Sounds */,
 				9A3F95A7239D44FF00A349D2 /* Game */,
 				9A3F95A6239D44F500A349D2 /* View */,
 			);
@@ -215,8 +229,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				9A3F958A239D416800A349D2 /* Main.storyboard in Resources */,
+				9A0A4BEC239DE29A0062F5BE /* lose.mp3 in Resources */,
 				9A3F958C239D416B00A349D2 /* Assets.xcassets in Resources */,
 				9A3F958F239D416B00A349D2 /* LaunchScreen.storyboard in Resources */,
+				9A0A4BEA239DE2400062F5BE /* win.mp3 in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
