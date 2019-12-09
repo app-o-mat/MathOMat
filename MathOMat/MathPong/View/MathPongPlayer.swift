@@ -39,7 +39,6 @@ class MathPongPlayer {
     }
 
     var buttons = [MathPongButtonNode]()
-    let buttonWidth: CGFloat = 100.0
 
     init(problemRotation: CGFloat, position: PlayerPosition) {
         self.problemRotation = problemRotation
@@ -47,11 +46,12 @@ class MathPongPlayer {
     }
 
     func addButton(scene: SKScene, xPos: CGFloat, text: String, lineOffset: CGFloat) -> MathPongButtonNode {
+        let buttonWidth: CGFloat = lineOffset * 0.66
         let button = MathPongButtonNode(
             color: UIColor.init(
                 hue: nextHue(),
                 saturation: 0.75, brightness: 0.5, alpha: 1.0),
-            size: CGSize(width: buttonWidth, height: 70),
+            size: CGSize(width: buttonWidth, height: buttonWidth * 0.70),
             flipped: position == .top)
         button.position =
             CGPoint(x: xPos,
@@ -61,7 +61,8 @@ class MathPongPlayer {
         return button
     }
 
-    func addButtons(scene: SKScene, problem: MathPongProblem, lineOffset: CGFloat) {
+    func addButtons(scene: SKScene, problem: MathPongProblem, lineOffset: CGFloat) -> [MathPongButtonNode] {
+        let buttonWidth: CGFloat = lineOffset * 0.66
         let possiblePositions: [CGFloat] = [scene.size.width / 2.0,
                                             scene.size.width / 2.0 - buttonWidth - 20,
                                             scene.size.width / 2.0 + buttonWidth + 20 ]
@@ -76,6 +77,7 @@ class MathPongPlayer {
             addButton(scene: scene, xPos: positions[1], text: wrongAnswers[0], lineOffset: lineOffset),
             addButton(scene: scene, xPos: positions[2], text: wrongAnswers[1], lineOffset: lineOffset),
         ]
+        return self.buttons
     }
 
     func removeButtons() {

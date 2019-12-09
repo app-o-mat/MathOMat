@@ -18,13 +18,19 @@ class MathPongScene: SKScene {
 
     let data: MathPongGameData
 
-    var currentProblem: MathPongProblem
+    var currentProblem: MathPongProblem {
+        didSet {
+            updateProblem()
+        }
+    }
     var currentPlayer = 0
 
     enum Constants {
         static let problemName = "problem"
         static let playerLineName = ["player1line", "player2line"]
-        static let lineOffset: CGFloat = 150
+        static let buttonLineName = ["button1line", "button2line"]
+        static let categoryObject: UInt32 = 0b0001
+        static let categoryGuide: UInt32 = 0b0010
     }
 
     enum GameState {
@@ -52,8 +58,11 @@ class MathPongScene: SKScene {
     func createGameBoard() {
         self.view?.backgroundColor = UIColor(hue: 0.0, saturation: 0.0, brightness: 0.2, alpha: 1.0)
         self.physicsWorld.gravity = CGVector(dx: 0, dy: 0)
-        createPlayerLine(yPosition: Constants.lineOffset, playerIndex: 0)
-        createPlayerLine(yPosition: self.size.height - Constants.lineOffset, playerIndex: 1)
+        createPlayerLine(yPosition: lineOffset(), playerIndex: 0)
+        createPlayerLine(yPosition: self.size.height - lineOffset(), playerIndex: 1)
+
+        createButtonLine(yPosition: lineOffset() * 3.5, playerIndex: 0)
+        createButtonLine(yPosition: self.size.height - (lineOffset() * 3.5), playerIndex: 1)
 
         createGameBoundary(xPosition: 0)
         createGameBoundary(xPosition: self.size.width)
@@ -84,7 +93,27 @@ class MathPongScene: SKScene {
         boundary.strokeColor = UIColor.white
         boundary.name = Constants.playerLineName[playerIndex]
         setupAsBoundary(line: boundary)
+
+        boundary.physicsBody?.categoryBitMask = Constants.categoryObject
+        boundary.physicsBody?.collisionBitMask = Constants.categoryObject
+
         addChild(boundary)
+    }
+
+    func createButtonLine(yPosition: CGFloat, playerIndex: Int) {
+        let path = CGMutablePath()
+        path.move(to: CGPoint(x: 0, y: yPosition))
+        path.addLine(to: CGPoint(x: self.size.width, y: yPosition))
+        let guide = SKShapeNode(path: path)
+        guide.lineWidth = 1
+        guide.strokeColor = UIColor.gray
+        guide.name = Constants.buttonLineName[playerIndex]
+        guide.physicsBody = SKPhysicsBody(edgeChainFrom: guide.path!)
+
+        guide.physicsBody?.categoryBitMask = Constants.categoryGuide
+        guide.physicsBody?.collisionBitMask = Constants.categoryGuide
+
+        addChild(guide)
     }
 
     func createProblem() {
@@ -106,8 +135,12 @@ class MathPongScene: SKScene {
         physicsBody.velocity = CGVector(dx: 150, dy: -240.0)
         physicsBody.usesPreciseCollisionDetection = true
         physicsBody.linearDamping = 0.0
-        physicsBody.contactTestBitMask = physicsBody.collisionBitMask
+        physicsBody.contactTestBitMask = Constants.categoryGuide | Constants.categoryObject
         physicsBody.allowsRotation = false
+
+        physicsBody.categoryBitMask = Constants.categoryObject
+        physicsBody.collisionBitMask = Constants.categoryObject
+
         problem.physicsBody = physicsBody
 
         problem.addChild(label)
@@ -115,9 +148,29 @@ class MathPongScene: SKScene {
         updateProblem()
     }
 
-    func createButtons() {
+    func removeButtons() {
         self.players.forEach { $0.removeButtons() }
-        self.players[currentPlayer].addButtons(scene: self, problem: currentProblem, lineOffset: Constants.lineOffset)
+    }
+
+    func createButtons() {
+        removeButtons()
+        let buttons =
+            self.players[currentPlayer].addButtons(scene: self, problem: currentProblem, lineOffset: lineOffset())
+
+        buttons[0].onTap = { [weak self] button in
+            guard let sself = self, let velocity = sself.problem?.physicsBody?.velocity else { return }
+            sself.run(SKAction.playSoundFileNamed("win", waitForCompletion: false))
+            sself.currentPlayer = 1 - sself.currentPlayer
+            sself.problem?.physicsBody?.velocity = CGVector(dx: velocity.dx, dy: -velocity.dy)
+            sself.currentProblem = sself.data.getNextProblem()
+        }
+
+        buttons[1].onTap = { button in
+            self.run(SKAction.playSoundFileNamed("lose", waitForCompletion: false))
+        }
+        buttons[2].onTap = { button in
+            self.run(SKAction.playSoundFileNamed("lose", waitForCompletion: true))
+        }
     }
 
     func updateProblem() {
@@ -132,7 +185,7 @@ class MathPongScene: SKScene {
         } else {
             label.position = CGPoint(x: 0, y: problemSize.height / 2.0)
         }
-        createButtons()
+        removeButtons()
     }
 
     func createGameBoundary(xPosition: CGFloat) {
@@ -143,6 +196,10 @@ class MathPongScene: SKScene {
         boundary.lineWidth = 2
         boundary.strokeColor = UIColor.white
         setupAsBoundary(line: boundary)
+
+        boundary.physicsBody?.categoryBitMask = Constants.categoryObject
+        boundary.physicsBody?.collisionBitMask = Constants.categoryObject
+
         addChild(boundary)
     }
 
@@ -167,13 +224,23 @@ extension MathPongScene: SKPhysicsContactDelegate {
         guard node(named: Constants.problemName, contact: contact) != nil else { return }
         if node(named: Constants.playerLineName[0], contact: contact) != nil {
             self.currentPlayer = 1
+            self.run(SKAction.playSoundFileNamed("lose", waitForCompletion: false))
         } else if node(named: Constants.playerLineName[1], contact: contact) != nil {
             self.currentPlayer = 0
+            self.run(SKAction.playSoundFileNamed("lose", waitForCompletion: false))
         } else {
+            if node(named: Constants.buttonLineName[currentPlayer], contact: contact) != nil {
+                createButtons()
+            }
             return
         }
         self.currentProblem = self.data.getNextProblem()
-        updateProblem()
     }
 
+    func lineOffset() -> CGFloat {
+        guard let view = self.view else { return 0.0 }
+
+        let size = view.frame.size
+        return size.height / 10 + 30
+    }
 }
