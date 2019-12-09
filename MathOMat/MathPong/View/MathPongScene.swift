@@ -9,20 +9,85 @@
 import SpriteKit
 import GameplayKit
 
+enum PlayerPosition {
+    case bottom
+    case top
+
+    func buttonYPosition(viewSize: CGSize, lineOffset: CGFloat) -> CGFloat {
+        switch self {
+        case .bottom:
+            return lineOffset / 2.0
+        case .top:
+            return viewSize.height - lineOffset / 2.0
+        }
+    }
+}
+
 class Player {
     let problemRotation: CGFloat
+    let position: PlayerPosition
     var velocity: CGFloat = 1.0
 
-    init(problemRotation: CGFloat) {
+    let hues: [CGFloat] = (0..<37).map { (i: Int) in CGFloat(1.0 / 35.0) * CGFloat(i) }
+    var currentHue = 0
+    func nextHue() -> CGFloat {
+        defer {
+            currentHue = (currentHue + 5) % hues.count
+        }
+        return hues[currentHue]
+    }
+
+    var buttons = [AnswerButtonNode]()
+    let buttonWidth: CGFloat = 100.0
+
+    init(problemRotation: CGFloat, position: PlayerPosition) {
         self.problemRotation = problemRotation
+        self.position = position
+    }
+
+    func addButton(scene: SKScene, xPos: CGFloat, text: String, lineOffset: CGFloat) -> AnswerButtonNode {
+        let button = AnswerButtonNode(
+            color: UIColor.init(
+                hue: nextHue(),
+                saturation: 0.75, brightness: 0.5, alpha: 1.0),
+            size: CGSize(width: buttonWidth, height: 70),
+            flipped: position == .top)
+        button.position =
+            CGPoint(x: xPos,
+                    y: position.buttonYPosition(viewSize: scene.size, lineOffset: lineOffset))
+        button.text = text
+        scene.addChild(button)
+        return button
+    }
+
+    func addButtons(scene: SKScene, problem: MathPongProblem, lineOffset: CGFloat) {
+        let possiblePositions: [CGFloat] = [scene.size.width / 2.0,
+                                            scene.size.width / 2.0 - buttonWidth - 20,
+                                            scene.size.width / 2.0 + buttonWidth + 20 ]
+        let positions: [CGFloat] = GKRandomSource.sharedRandom()
+            .arrayByShufflingObjects(in: possiblePositions).map { ($0 as? CGFloat) ?? 0.0 }
+        let wrongAnswers = GKRandomSource.sharedRandom()
+            .arrayByShufflingObjects(in: [String](problem.wrongAnswers))
+            .map { ($0 as? String) ?? "" }
+
+        self.buttons = [
+            addButton(scene: scene, xPos: positions[0], text: problem.answer, lineOffset: lineOffset),
+            addButton(scene: scene, xPos: positions[1], text: wrongAnswers[0], lineOffset: lineOffset),
+            addButton(scene: scene, xPos: positions[2], text: wrongAnswers[1], lineOffset: lineOffset),
+        ]
+    }
+
+    func removeButtons() {
+        self.buttons.forEach { $0.removeFromParent() }
     }
 }
 
 class MathPongScene: SKScene {
     var problem: SKNode?
+
     let players = [
-        Player(problemRotation: 0),
-        Player(problemRotation: .pi)]
+        Player(problemRotation: 0, position: .bottom),
+        Player(problemRotation: .pi, position: .top)]
 
     let data: MathPongGameData
 
@@ -32,6 +97,7 @@ class MathPongScene: SKScene {
     enum Constants {
         static let problemName = "problem"
         static let playerLineName = ["player1line", "player2line"]
+        static let lineOffset: CGFloat = 150
     }
 
     init(size: CGSize, data: MathPongGameData) {
@@ -50,12 +116,15 @@ class MathPongScene: SKScene {
     }
 
     func createGameBoard() {
+        self.view?.backgroundColor = UIColor(hue: 0.0, saturation: 0.0, brightness: 0.2, alpha: 1.0)
         self.physicsWorld.gravity = CGVector(dx: 0, dy: 0)
-        createPlayerLine(yPosition: 150, playerIndex: 0)
-        createPlayerLine(yPosition: self.size.height - 150, playerIndex: 1)
+        createPlayerLine(yPosition: Constants.lineOffset, playerIndex: 0)
+        createPlayerLine(yPosition: self.size.height - Constants.lineOffset, playerIndex: 1)
 
         createGameBoundary(xPosition: 0)
         createGameBoundary(xPosition: self.size.width)
+
+        createButtons()
     }
 
     func createPlayerLine(yPosition: CGFloat, playerIndex: Int) {
@@ -98,6 +167,11 @@ class MathPongScene: SKScene {
         updateProblem()
     }
 
+    func createButtons() {
+        self.players.forEach { $0.removeButtons() }
+        self.players[currentPlayer].addButtons(scene: self, problem: currentProblem, lineOffset: Constants.lineOffset)
+    }
+
     func updateProblem() {
         guard let label = self.problem?.children[0] as? SKLabelNode else { return }
 
@@ -110,6 +184,7 @@ class MathPongScene: SKScene {
         } else {
             label.position = CGPoint(x: 0, y: problemSize.height / 2.0)
         }
+        createButtons()
     }
 
     func createGameBoundary(xPosition: CGFloat) {
@@ -118,7 +193,7 @@ class MathPongScene: SKScene {
         path.addLine(to: CGPoint(x: xPosition, y: self.size.height))
         let boundary = SKShapeNode(path: path)
         boundary.lineWidth = 2
-        boundary.strokeColor = UIColor.red
+        boundary.strokeColor = UIColor.white
         setupAsBoundary(line: boundary)
         addChild(boundary)
     }
