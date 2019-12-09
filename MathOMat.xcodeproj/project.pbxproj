@@ -16,6 +16,7 @@
 		9A3F959A239D416B00A349D2 /* MathOMatTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A3F9599239D416B00A349D2 /* MathOMatTests.swift */; };
 		9A3F95A9239D451400A349D2 /* MathPongGameData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A3F95A8239D451400A349D2 /* MathPongGameData.swift */; };
 		9A952DE7239DAF60009406D6 /* AnswerButtonNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A952DE6239DAF60009406D6 /* AnswerButtonNode.swift */; };
+		9A952DE9239DD44A009406D6 /* MathPongPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A952DE8239DD44A009406D6 /* MathPongPlayer.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -42,6 +43,7 @@
 		9A3F959B239D416B00A349D2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		9A3F95A8239D451400A349D2 /* MathPongGameData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MathPongGameData.swift; sourceTree = "<group>"; };
 		9A952DE6239DAF60009406D6 /* AnswerButtonNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnswerButtonNode.swift; sourceTree = "<group>"; };
+		9A952DE8239DD44A009406D6 /* MathPongPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MathPongPlayer.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -117,6 +119,7 @@
 				9A3F9584239D416700A349D2 /* MathPongScene.swift */,
 				9A3F9586239D416700A349D2 /* MathPongSceneViewController.swift */,
 				9A952DE6239DAF60009406D6 /* AnswerButtonNode.swift */,
+				9A952DE8239DD44A009406D6 /* MathPongPlayer.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -252,6 +255,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9A952DE9239DD44A009406D6 /* MathPongPlayer.swift in Sources */,
 				9A952DE7239DAF60009406D6 /* AnswerButtonNode.swift in Sources */,
 				9A3F9585239D416700A349D2 /* MathPongScene.swift in Sources */,
 				9A3F9587239D416700A349D2 /* MathPongSceneViewController.swift in Sources */,
