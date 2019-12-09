@@ -29,14 +29,7 @@ class MathPongPlayer {
     let position: PlayerPosition
     var velocity: CGFloat = 1.0
 
-    let hues: [CGFloat] = (0..<37).map { (i: Int) in CGFloat(1.0 / 35.0) * CGFloat(i) }
-    var currentHue = 0
-    func nextHue() -> CGFloat {
-        defer {
-            currentHue = (currentHue + 5) % hues.count
-        }
-        return hues[currentHue]
-    }
+    let colors = RandomColors()
 
     var buttons = [MathPongButtonNode]()
 
@@ -48,9 +41,7 @@ class MathPongPlayer {
     func addButton(scene: SKScene, xPos: CGFloat, text: String, lineOffset: CGFloat) -> MathPongButtonNode {
         let buttonWidth: CGFloat = lineOffset * 0.66
         let button = MathPongButtonNode(
-            color: UIColor.init(
-                hue: nextHue(),
-                saturation: 0.75, brightness: 0.5, alpha: 1.0),
+            color: colors.nextColor(),
             size: CGSize(width: buttonWidth, height: buttonWidth * 0.70),
             flipped: position == .top)
         button.position =

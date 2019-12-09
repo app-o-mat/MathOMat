@@ -59,7 +59,7 @@ class MathPongScene: SKScene {
     }
 
     func createGameBoard() {
-        self.view?.backgroundColor = UIColor(hue: 0.0, saturation: 0.0, brightness: 0.2, alpha: 1.0)
+        self.view?.backgroundColor = AppColor.boardBackground
         self.physicsWorld.gravity = CGVector(dx: 0, dy: 0)
         createPlayerLine(yPosition: lineOffset(), playerIndex: 0)
         createPlayerLine(yPosition: self.size.height - lineOffset(), playerIndex: 1)
@@ -71,7 +71,7 @@ class MathPongScene: SKScene {
         createGameBoundary(xPosition: self.size.width)
 
         let startButton = MathPongButtonNode(
-            color: UIColor(hue: 0.5, saturation: 0.75, brightness: 0.2, alpha: 1.0),
+            color: AppColor.startButtonBackground,
             size: CGSize(width: 200, height: 75))
         addChild(startButton)
         startButton.text = "Start"
@@ -93,7 +93,7 @@ class MathPongScene: SKScene {
         path.addLine(to: CGPoint(x: self.size.width, y: yPosition))
         let boundary = SKShapeNode(path: path)
         boundary.lineWidth = 5
-        boundary.strokeColor = UIColor.white
+        boundary.strokeColor = AppColor.boundaryColor
         boundary.name = Constants.playerLineName[playerIndex]
         setupAsBoundary(line: boundary)
 
@@ -109,7 +109,7 @@ class MathPongScene: SKScene {
         path.addLine(to: CGPoint(x: self.size.width, y: yPosition))
         let guide = SKShapeNode(path: path)
         guide.lineWidth = 1
-        guide.strokeColor = UIColor.gray
+        guide.strokeColor = AppColor.guideColor
         guide.name = Constants.buttonLineName[playerIndex]
         guide.physicsBody = SKPhysicsBody(edgeChainFrom: guide.path!)
 
@@ -128,8 +128,8 @@ class MathPongScene: SKScene {
         self.problem = problem
         addChild(problem)
 
-        problem.fillColor = UIColor.clear
-        problem.strokeColor = UIColor.clear
+        problem.fillColor = AppColor.debugColor
+        problem.strokeColor = AppColor.debugColor
         problem.name = Constants.problemName
         problem.position = CGPoint(x: self.size.width / 2, y: self.size.height / 2)
 
@@ -199,7 +199,7 @@ class MathPongScene: SKScene {
         path.addLine(to: CGPoint(x: xPosition, y: self.size.height))
         let boundary = SKShapeNode(path: path)
         boundary.lineWidth = 2
-        boundary.strokeColor = UIColor.white
+        boundary.strokeColor = AppColor.boundaryColor
         setupAsBoundary(line: boundary)
 
         boundary.physicsBody?.categoryBitMask = Constants.categoryObject

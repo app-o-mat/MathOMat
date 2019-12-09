@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		9A0A4BEA239DE2400062F5BE /* win.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 9A0A4BE9239DE2400062F5BE /* win.mp3 */; };
 		9A0A4BEC239DE29A0062F5BE /* lose.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 9A0A4BEB239DE29A0062F5BE /* lose.mp3 */; };
+		9A0A4BEF239EC7E00062F5BE /* Colors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A0A4BEE239EC7E00062F5BE /* Colors.swift */; };
 		9A3F957F239D416700A349D2 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A3F957E239D416700A349D2 /* AppDelegate.swift */; };
 		9A3F9585239D416700A349D2 /* MathPongScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A3F9584239D416700A349D2 /* MathPongScene.swift */; };
 		9A3F9587239D416700A349D2 /* MathPongSceneViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A3F9586239D416700A349D2 /* MathPongSceneViewController.swift */; };
@@ -34,6 +35,7 @@
 /* Begin PBXFileReference section */
 		9A0A4BE9239DE2400062F5BE /* win.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = win.mp3; sourceTree = "<group>"; };
 		9A0A4BEB239DE29A0062F5BE /* lose.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = lose.mp3; sourceTree = "<group>"; };
+		9A0A4BEE239EC7E00062F5BE /* Colors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Colors.swift; sourceTree = "<group>"; };
 		9A3F957B239D416700A349D2 /* MathOMat.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MathOMat.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9A3F957E239D416700A349D2 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		9A3F9584239D416700A349D2 /* MathPongScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MathPongScene.swift; sourceTree = "<group>"; };
@@ -77,6 +79,14 @@
 			path = Sounds;
 			sourceTree = "<group>";
 		};
+		9A0A4BED239EC7980062F5BE /* Utilities */ = {
+			isa = PBXGroup;
+			children = (
+				9A0A4BEE239EC7E00062F5BE /* Colors.swift */,
+			);
+			path = Utilities;
+			sourceTree = "<group>";
+		};
 		9A3F9572239D416700A349D2 = {
 			isa = PBXGroup;
 			children = (
@@ -98,8 +108,9 @@
 		9A3F957D239D416700A349D2 /* MathOMat */ = {
 			isa = PBXGroup;
 			children = (
-				9A3F957E239D416700A349D2 /* AppDelegate.swift */,
 				9A3F95A4239D428800A349D2 /* MathPong */,
+				9A0A4BED239EC7980062F5BE /* Utilities */,
+				9A3F957E239D416700A349D2 /* AppDelegate.swift */,
 				9A3F9588239D416800A349D2 /* Main.storyboard */,
 				9A3F958B239D416B00A349D2 /* Assets.xcassets */,
 				9A3F958D239D416B00A349D2 /* LaunchScreen.storyboard */,
@@ -274,6 +285,7 @@
 				9A952DE9239DD44A009406D6 /* MathPongPlayer.swift in Sources */,
 				9A952DE7239DAF60009406D6 /* MathPongButtonNode.swift in Sources */,
 				9A3F9585239D416700A349D2 /* MathPongScene.swift in Sources */,
+				9A0A4BEF239EC7E00062F5BE /* Colors.swift in Sources */,
 				9A3F9587239D416700A349D2 /* MathPongSceneViewController.swift in Sources */,
 				9A3F957F239D416700A349D2 /* AppDelegate.swift in Sources */,
 				9A3F95A9239D451400A349D2 /* MathPongGameData.swift in Sources */,
