@@ -10,7 +10,7 @@ import SpriteKit
 import GameplayKit
 
 class MathPongScene: SKScene {
-    var problem: SKNode?
+    var problemNode: SKNode?
 
     let players = [
         MathPongPlayer(problemRotation: 0, position: .bottom),
@@ -97,8 +97,8 @@ class MathPongScene: SKScene {
         boundary.name = Constants.playerLineName[playerIndex]
         setupAsBoundary(line: boundary)
 
-        boundary.physicsBody?.categoryBitMask = Constants.categoryObject
-        boundary.physicsBody?.collisionBitMask = Constants.categoryObject
+        boundary.physicsBody?.categoryBitMask = Constants.categoryGuide
+        boundary.physicsBody?.collisionBitMask = Constants.categoryGuide
 
         addChild(boundary)
     }
@@ -124,20 +124,20 @@ class MathPongScene: SKScene {
         label.fontSize = self.size.height / 20
 
         let problemSize = label.frame.size
-        let problem = SKShapeNode(rectOf: problemSize)
-        self.problem = problem
-        addChild(problem)
+        let problemNode = SKSpriteNode(color: AppColor.debugColor, size: problemSize)
+        self.problemNode = problemNode
+        addChild(problemNode)
 
-        problem.fillColor = AppColor.debugColor
-        problem.strokeColor = AppColor.debugColor
-        problem.name = Constants.problemName
-        problem.position = CGPoint(x: self.size.width / 2, y: self.size.height / 2)
+        problemNode.name = Constants.problemName
+        problemNode.position = CGPoint(x: self.size.width / 2, y: self.size.height / 2)
+        problemNode.addChild(label)
 
-        let physicsBody = SKPhysicsBody(
-            rectangleOf: CGSize(width: problemSize.width, height: problemSize.height))
+        updateProblem()
+    }
 
-        let dxy: CGFloat = self.size.height * 0.1
-        physicsBody.velocity = CGVector(dx: dxy * 0.5, dy: -dxy)
+    func problemPhysicsBody(size: CGSize) -> SKPhysicsBody {
+        let physicsBody = SKPhysicsBody(rectangleOf: size)
+
         physicsBody.usesPreciseCollisionDetection = true
         physicsBody.linearDamping = 0.0
         physicsBody.contactTestBitMask = Constants.categoryGuide | Constants.categoryObject
@@ -145,12 +145,9 @@ class MathPongScene: SKScene {
 
         physicsBody.categoryBitMask = Constants.categoryObject
         physicsBody.collisionBitMask = Constants.categoryObject
+        physicsBody.velocity = initialVelocity()
 
-        problem.physicsBody = physicsBody
-
-        problem.addChild(label)
-
-        updateProblem()
+        return physicsBody
     }
 
     func removeButtons() {
@@ -163,25 +160,24 @@ class MathPongScene: SKScene {
             self.players[currentPlayer].addButtons(scene: self, problem: currentProblem, lineOffset: lineOffset())
 
         buttons[0].onTap = { [weak self] button in
-            guard let sself = self, let velocity = sself.problem?.physicsBody?.velocity else { return }
-            sself.run(sself.winSoundAction)
-            sself.currentPlayer = 1 - sself.currentPlayer
-            sself.problem?.physicsBody?.velocity = CGVector(dx: velocity.dx * 1.1, dy: -velocity.dy * 1.1)
-            sself.currentProblem = sself.data.getNextProblem()
+            self?.currentPlayerHits()
         }
 
         buttons[1].onTap = { [weak self] button in
-            guard let sself = self else { return }
-            sself.run(sself.loseSoundAction)
+            self?.currentPlayerMisses()
         }
         buttons[2].onTap = { [weak self] button in
-            guard let sself = self else { return }
-            sself.run(sself.loseSoundAction)
+            self?.currentPlayerMisses()
         }
     }
 
     func updateProblem() {
-        guard let label = self.problem?.children[0] as? SKLabelNode else { return }
+        guard
+            let problemNode = self.problemNode as? SKSpriteNode,
+            let label = problemNode.children[0] as? SKLabelNode
+        else {
+            return
+        }
 
         label.text = currentProblem.question
         let problemSize = label.frame.size
@@ -192,6 +188,13 @@ class MathPongScene: SKScene {
         } else {
             label.position = CGPoint(x: 0, y: problemSize.height / 2.0)
         }
+
+        problemNode.size = problemSize
+        let newPhysicsBody = problemPhysicsBody(size: problemSize)
+        if let physicsBody = problemNode.physicsBody {
+            newPhysicsBody.velocity = physicsBody.velocity
+        }
+        problemNode.physicsBody = newPhysicsBody
         removeButtons()
     }
 
@@ -217,6 +220,30 @@ class MathPongScene: SKScene {
         line.physicsBody?.friction = 0
         line.physicsBody?.usesPreciseCollisionDetection = true
     }
+
+    func currentPlayerHits() {
+        guard let velocity = self.problemNode?.physicsBody?.velocity else { return }
+        self.run(self.winSoundAction)
+
+        self.currentPlayer = 1 - self.currentPlayer
+        self.problemNode?.physicsBody?.velocity = CGVector(dx: velocity.dx * 1.1, dy: -velocity.dy * 1.1)
+
+        self.currentProblem = self.data.getNextProblem()
+    }
+
+    func currentPlayerMisses() {
+        self.run(self.loseSoundAction)
+
+        self.problemNode?.physicsBody = nil
+        self.problemNode?.position = CGPoint(x: self.size.width / 2, y: self.size.height / 2)
+
+        self.currentProblem = self.data.getNextProblem()
+    }
+
+    func initialVelocity() -> CGVector {
+        let dxy: CGFloat = self.size.height * 0.1
+        return CGVector(dx: dxy * 0.5, dy: dxy * CGFloat(self.currentPlayer * 2 - 1))
+    }
 }
 
 extension MathPongScene: SKPhysicsContactDelegate {
@@ -230,18 +257,12 @@ extension MathPongScene: SKPhysicsContactDelegate {
     func didBegin(_ contact: SKPhysicsContact) {
         guard node(named: Constants.problemName, contact: contact) != nil else { return }
         if node(named: Constants.playerLineName[0], contact: contact) != nil {
-            self.currentPlayer = 1
-            self.run(self.loseSoundAction)
+            currentPlayerMisses()
         } else if node(named: Constants.playerLineName[1], contact: contact) != nil {
-            self.currentPlayer = 0
-            self.run(self.loseSoundAction)
-        } else {
-            if node(named: Constants.buttonLineName[currentPlayer], contact: contact) != nil {
-                createButtons()
-            }
-            return
+            currentPlayerMisses()
+        } else if node(named: Constants.buttonLineName[currentPlayer], contact: contact) != nil {
+            createButtons()
         }
-        self.currentProblem = self.data.getNextProblem()
     }
 
     func lineOffset() -> CGFloat {
