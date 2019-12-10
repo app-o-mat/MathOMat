@@ -28,6 +28,7 @@ class MathPongPlayer {
     let problemRotation: CGFloat
     let position: PlayerPosition
     var velocity: CGFloat = 1.0
+    var score = 0
 
     let colors = RandomColors()
 

@@ -28,6 +28,7 @@ class MathPongButtonNode: SKSpriteNode {
         self.isUserInteractionEnabled = true
         addChild(labelNode)
         labelNode.fontSize = size.height * 0.8
+        labelNode.fontName = "Courier"
         if flipped {
             labelNode.zRotation = .pi
         }

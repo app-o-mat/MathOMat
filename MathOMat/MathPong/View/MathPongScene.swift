@@ -11,6 +11,7 @@ import GameplayKit
 
 class MathPongScene: SKScene {
     var problemNode: SKNode?
+    var scoreNodes = [SKLabelNode(), SKLabelNode()]
 
     let players = [
         MathPongPlayer(problemRotation: 0, position: .bottom),
@@ -31,6 +32,7 @@ class MathPongScene: SKScene {
         static let buttonLineName = ["button1line", "button2line"]
         static let categoryObject: UInt32 = 0b0001
         static let categoryGuide: UInt32 = 0b0010
+        static let fontName = "Courier"
     }
 
     enum GameState {
@@ -70,6 +72,10 @@ class MathPongScene: SKScene {
         createGameBoundary(xPosition: 0)
         createGameBoundary(xPosition: self.size.width)
 
+        addStartButton()
+    }
+
+    func addStartButton() {
         let startButton = MathPongButtonNode(
             color: AppColor.startButtonBackground,
             size: CGSize(width: 200, height: 75))
@@ -83,7 +89,10 @@ class MathPongScene: SKScene {
     }
 
     func createRunningGameBoard() {
-        createButtons()
+        self.players[0].score = 0
+        self.players[1].score = 0
+        self.scoreNodes[0].text = "0"
+        self.scoreNodes[1].text = "0"
         createProblem()
     }
 
@@ -101,6 +110,14 @@ class MathPongScene: SKScene {
         boundary.physicsBody?.collisionBitMask = Constants.categoryGuide
 
         addChild(boundary)
+
+        let score = self.scoreNodes[playerIndex]
+        score.text = "\(self.players[playerIndex].score)"
+        score.fontName = Constants.fontName
+        score.fontSize *= 2
+        score.position = CGPoint(x: score.fontSize + 5, y: yPosition - 50 * CGFloat(playerIndex * 2 - 1))
+        score.zRotation = .pi / 2.0
+        addChild(score)
     }
 
     func createButtonLine(yPosition: CGFloat, playerIndex: Int) {
@@ -122,6 +139,7 @@ class MathPongScene: SKScene {
     func createProblem() {
         let label = SKLabelNode(text: self.currentProblem.question)
         label.fontSize = self.size.height / 20
+        label.fontName = Constants.fontName
 
         let problemSize = label.frame.size
         let problemNode = SKSpriteNode(color: AppColor.debugColor, size: problemSize)
@@ -234,6 +252,12 @@ class MathPongScene: SKScene {
     func currentPlayerMisses() {
         self.run(self.loseSoundAction)
 
+        let otherPlayer = 1 - currentPlayer
+        self.players[otherPlayer].score += 1
+        scoreNodes[otherPlayer].text = "\(self.players[otherPlayer].score)"
+
+        guard self.players[otherPlayer].score < 7 else { return gameOver() }
+
         self.problemNode?.physicsBody = nil
         self.problemNode?.position = CGPoint(x: self.size.width / 2, y: self.size.height / 2)
 
@@ -243,6 +267,12 @@ class MathPongScene: SKScene {
     func initialVelocity() -> CGVector {
         let dxy: CGFloat = self.size.height * 0.1
         return CGVector(dx: dxy * 0.5, dy: dxy * CGFloat(self.currentPlayer * 2 - 1))
+    }
+
+    func gameOver() {
+        self.problemNode?.removeFromParent()
+        self.problemNode = nil
+        addStartButton()
     }
 }
 
