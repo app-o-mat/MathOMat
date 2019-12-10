@@ -32,8 +32,8 @@ enum AppColor {
     static let debugColor = UIColor.clear
 
     static let boardBackground = UIColor(hue: 0.0, saturation: 0.0, brightness: 0.2, alpha: 1.0)
-    static let startButtonBackground = UIColor(hue: 0.5, saturation: 0.75, brightness: 0.2, alpha: 1.0)
+    static let startButtonBackground = UIColor.clear
 
     static let boundaryColor = UIColor.white
-    static let guideColor = UIColor.clear
+    static let guideColor = UIColor.lightGray
 }
