@@ -33,6 +33,7 @@ class MathPongScene: SKScene {
         static let categoryObject: UInt32 = 0b0001
         static let categoryGuide: UInt32 = 0b0010
         static let fontName = "Courier"
+        static let sideInset: CGFloat = 5
     }
 
     enum GameState {
@@ -56,8 +57,8 @@ class MathPongScene: SKScene {
     required init?(coder aDecoder: NSCoder) { fatalError("init(coder:) has not been implemented") }
 
     override func didMove(to view: SKView) {
-        createGameBoard()
         physicsWorld.contactDelegate = self
+        createGameBoard()
     }
 
     func createGameBoard() {
@@ -66,11 +67,12 @@ class MathPongScene: SKScene {
         createPlayerLine(yPosition: lineOffset(), playerIndex: 0)
         createPlayerLine(yPosition: self.size.height - lineOffset(), playerIndex: 1)
 
-        createButtonLine(yPosition: lineOffset() * 3.5, playerIndex: 0)
-        createButtonLine(yPosition: self.size.height - (lineOffset() * 3.5), playerIndex: 1)
+        let guidePos = self.size.height / 3.0
+        createShowButtonsLine(yPosition: guidePos, playerIndex: 0)
+        createShowButtonsLine(yPosition: self.size.height - guidePos, playerIndex: 1)
 
-        createGameBoundary(xPosition: 0)
-        createGameBoundary(xPosition: self.size.width)
+        createGameBoundary(xPosition: Constants.sideInset)
+        createGameBoundary(xPosition: self.size.width - Constants.sideInset)
 
         addStartButton()
     }
@@ -98,8 +100,8 @@ class MathPongScene: SKScene {
 
     func createPlayerLine(yPosition: CGFloat, playerIndex: Int) {
         let path = CGMutablePath()
-        path.move(to: CGPoint(x: 0, y: yPosition))
-        path.addLine(to: CGPoint(x: self.size.width, y: yPosition))
+        path.move(to: CGPoint(x: Constants.sideInset, y: yPosition))
+        path.addLine(to: CGPoint(x: self.size.width - Constants.sideInset, y: yPosition))
         let boundary = SKShapeNode(path: path)
         boundary.lineWidth = 5
         boundary.strokeColor = AppColor.boundaryColor
@@ -120,10 +122,10 @@ class MathPongScene: SKScene {
         addChild(score)
     }
 
-    func createButtonLine(yPosition: CGFloat, playerIndex: Int) {
+    func createShowButtonsLine(yPosition: CGFloat, playerIndex: Int) {
         let path = CGMutablePath()
-        path.move(to: CGPoint(x: 0, y: yPosition))
-        path.addLine(to: CGPoint(x: self.size.width, y: yPosition))
+        path.move(to: CGPoint(x: Constants.sideInset, y: yPosition))
+        path.addLine(to: CGPoint(x: self.size.width - Constants.sideInset, y: yPosition))
         let guide = SKShapeNode(path: path)
         guide.lineWidth = 1
         guide.strokeColor = AppColor.guideColor
@@ -299,6 +301,8 @@ extension MathPongScene: SKPhysicsContactDelegate {
         guard let view = self.view else { return 0.0 }
 
         let size = view.frame.size
-        return size.height / 10 + 30
+        let maxInset = max(view.safeAreaInsets.top, view.safeAreaInsets.bottom)
+
+        return size.height / 10 + maxInset
     }
 }

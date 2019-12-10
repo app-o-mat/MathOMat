@@ -14,12 +14,12 @@ enum PlayerPosition {
     case bottom
     case top
 
-    func buttonYPosition(viewSize: CGSize, lineOffset: CGFloat) -> CGFloat {
+    func buttonYPosition(viewSize: CGSize, buttonHeight: CGFloat, lineOffset: CGFloat) -> CGFloat {
         switch self {
         case .bottom:
-            return lineOffset / 2.0
+            return lineOffset - 15.0 - buttonHeight / 2.0
         case .top:
-            return viewSize.height - lineOffset / 2.0
+            return viewSize.height - lineOffset + 15.0 + buttonHeight / 2.0
         }
     }
 }
@@ -40,14 +40,17 @@ class MathPongPlayer {
     }
 
     func addButton(scene: SKScene, xPos: CGFloat, text: String, lineOffset: CGFloat) -> MathPongButtonNode {
-        let buttonWidth: CGFloat = lineOffset * 0.66
+        let buttonWidth = lineOffset * 0.66
+        let buttonSize = CGSize(width: lineOffset * 0.66, height: buttonWidth * 0.70)
         let button = MathPongButtonNode(
             color: colors.nextColor(),
-            size: CGSize(width: buttonWidth, height: buttonWidth * 0.70),
+            size: buttonSize,
             flipped: position == .top)
         button.position =
             CGPoint(x: xPos,
-                    y: position.buttonYPosition(viewSize: scene.size, lineOffset: lineOffset))
+                    y: position.buttonYPosition(viewSize: scene.size,
+                                                buttonHeight: buttonSize.height,
+                                                lineOffset: lineOffset))
         button.text = text
         scene.addChild(button)
         return button
