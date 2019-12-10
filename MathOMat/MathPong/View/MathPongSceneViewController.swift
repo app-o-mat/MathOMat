@@ -12,24 +12,32 @@ import GameplayKit
 
 class MathPongSceneViewController: UIViewController {
 
-    var scene: SKScene?
+    var scene: MathPongScene?
+    var viewDidAppearAlready = false
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+        if !viewDidAppearAlready {
+            viewDidAppearFirstTime()
+        }
+        viewDidAppearAlready = true
+    }
 
-        startGame()
+    func viewDidAppearFirstTime() {
+        self.scene?.startGame()
+    }
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        if let skView = view as? SKView {
+            self.scene = MathPongScene(size: view.frame.size,
+                                       data: MultiplicationData())
+            skView.presentScene(self.scene)
+        }
     }
 
     override var prefersStatusBarHidden: Bool {
         return true
     }
 
-    func startGame() {
-        guard self.scene == nil else { return }
-        self.scene = MathPongScene(size: view.frame.size,
-                                  data: MultiplicationData())
-        if let skView = view as? SKView {
-            skView.presentScene(scene)
-        }
-    }
 }
