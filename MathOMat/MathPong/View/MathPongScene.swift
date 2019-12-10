@@ -135,7 +135,9 @@ class MathPongScene: SKScene {
 
         let physicsBody = SKPhysicsBody(
             rectangleOf: CGSize(width: problemSize.width, height: problemSize.height))
-        physicsBody.velocity = CGVector(dx: 150, dy: -240.0)
+
+        let dxy: CGFloat = self.size.height * 0.1
+        physicsBody.velocity = CGVector(dx: dxy * 0.5, dy: -dxy)
         physicsBody.usesPreciseCollisionDetection = true
         physicsBody.linearDamping = 0.0
         physicsBody.contactTestBitMask = Constants.categoryGuide | Constants.categoryObject
@@ -164,7 +166,7 @@ class MathPongScene: SKScene {
             guard let sself = self, let velocity = sself.problem?.physicsBody?.velocity else { return }
             sself.run(sself.winSoundAction)
             sself.currentPlayer = 1 - sself.currentPlayer
-            sself.problem?.physicsBody?.velocity = CGVector(dx: velocity.dx, dy: -velocity.dy)
+            sself.problem?.physicsBody?.velocity = CGVector(dx: velocity.dx * 1.1, dy: -velocity.dy * 1.1)
             sself.currentProblem = sself.data.getNextProblem()
         }
 
