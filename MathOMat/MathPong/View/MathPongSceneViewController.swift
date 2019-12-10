@@ -12,8 +12,22 @@ import GameplayKit
 
 class MathPongSceneViewController: UIViewController {
 
-    override func viewDidLoad() {
-        let scene = MathPongScene(size: view.frame.size, data: MultiplicationData())
+    var scene: SKScene?
+
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+
+        startGame()
+    }
+
+    override var prefersStatusBarHidden: Bool {
+        return true
+    }
+
+    func startGame() {
+        guard self.scene == nil else { return }
+        self.scene = MathPongScene(size: view.frame.size,
+                                  data: MultiplicationData())
         if let skView = view as? SKView {
             skView.presentScene(scene)
         }
