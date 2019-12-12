@@ -31,7 +31,13 @@ class RandomColors {
 enum AppColor {
     static let debugColor = UIColor.clear
 
-    static let boardBackground = UIColor(hue: 0.0, saturation: 0.0, brightness: 0.2, alpha: 1.0)
+    static let boardBackground =
+        [UIColor(hue: 0.0, saturation: 0.0, brightness: 0.2, alpha: 1.0),
+         UIColor(hue: 0.75, saturation: 0.50, brightness: 0.5, alpha: 1.0),
+         UIColor(hue: 0.95, saturation: 0.50, brightness: 0.75, alpha: 1.0),
+         UIColor(hue: 0.5, saturation: 0.50, brightness: 0.5, alpha: 1.0),
+         UIColor(hue: 0.25, saturation: 0.50, brightness: 0.5, alpha: 1.0),
+         ]
     static let startButtonBackground = UIColor.clear
 
     static let boundaryColor = UIColor.white

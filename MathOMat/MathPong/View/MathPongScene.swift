@@ -15,6 +15,14 @@ class MathPongScene: SKScene {
 
     var startButton: MathPongButtonNode?
     var pauseButton: MathPongButtonNode?
+    var themeButton: MathPongButtonNode?
+
+    var backgroundIndex = 0 {
+        didSet {
+            UserDefaults.standard.set(backgroundIndex, forKey: Constants.settingBackground)
+            self.backgroundColor = AppColor.boardBackground[backgroundIndex]
+        }
+    }
 
     var currentPlayer = 0
     let players = [
@@ -25,7 +33,7 @@ class MathPongScene: SKScene {
 
     var currentProblem: MathPongProblem {
         didSet {
-            updateProblem()
+            didSetCurrentProblem()
         }
     }
 
@@ -37,6 +45,7 @@ class MathPongScene: SKScene {
         static let categoryGuide: UInt32 = 0b0010
         static let fontName = "Courier"
         static let sideInset: CGFloat = 5
+        static let settingBackground = "math-pong.settingBackground"
     }
 
     enum GameState {
@@ -46,30 +55,35 @@ class MathPongScene: SKScene {
     }
     var gameState = GameState.waitingToStart
 
+    let winSoundAction = SKAction.playSoundFileNamed("win", waitForCompletion: false)
+    let loseSoundAction = SKAction.playSoundFileNamed("lose", waitForCompletion: false)
+
     init(size: CGSize, data: MathPongGameData) {
         self.data = data
         self.currentProblem = self.data.getNextProblem()
+        self.backgroundIndex = UserDefaults.standard.integer(forKey: Constants.settingBackground)
         super.init(size: size)
-    }
 
-    let winSoundAction = SKAction.playSoundFileNamed("win", waitForCompletion: false)
-    let loseSoundAction = SKAction.playSoundFileNamed("lose", waitForCompletion: false)
+        self.physicsWorld.contactDelegate = self
+        self.physicsWorld.gravity = CGVector(dx: 0, dy: 0)
+
+        self.backgroundColor = AppColor.boardBackground[backgroundIndex]
+    }
 
     @available(*, unavailable)
     required init?(coder aDecoder: NSCoder) { fatalError("init(coder:) has not been implemented") }
 
-    override func didMove(to view: SKView) {
-        physicsWorld.contactDelegate = self
-        self.isUserInteractionEnabled = true
-        self.backgroundColor = AppColor.boardBackground
-    }
-
     func startGame() {
         createGameBoard()
+        addWaitingToStartButtons()
+    }
+
+    func addWaitingToStartButtons() {
+        addStartButton()
+        addThemeButton()
     }
 
     func createGameBoard() {
-        self.physicsWorld.gravity = CGVector(dx: 0, dy: 0)
         createPlayerLine(yPosition: lineOffset(), playerIndex: 0)
         createPlayerLine(yPosition: self.size.height - lineOffset(), playerIndex: 1)
 
@@ -79,8 +93,6 @@ class MathPongScene: SKScene {
 
         createGameBoundary(xPosition: Constants.sideInset)
         createGameBoundary(xPosition: self.size.width - Constants.sideInset)
-
-        addStartButton()
     }
 
     func removeControlButtons() {
@@ -88,6 +100,8 @@ class MathPongScene: SKScene {
         self.pauseButton = nil
         self.startButton?.removeFromParent()
         self.startButton = nil
+        self.themeButton?.removeFromParent()
+        self.themeButton = nil
     }
 
     func addStartButton() {
@@ -101,15 +115,31 @@ class MathPongScene: SKScene {
         button.texture = SKTexture(imageNamed: "play-button")
         button.position = CGPoint(x: self.size.width / 2, y: self.size.height / 2)
         button.onTap = { [weak self] button in
-            guard let sself = self else { return }
-
-            if sself.gameState == .paused {
-                sself.unPauseGame()
-            } else if sself.gameState == .waitingToStart {
-                sself.createRunningGameBoard()
-            }
-            sself.addPauseButton()
+            self?.onStartTapped()
         }
+    }
+
+    func addThemeButton() {
+        let button = MathPongButtonNode(
+            color: AppColor.startButtonBackground,
+            size: CGSize(width: 64, height: 64))
+        self.themeButton = button
+        addChild(button)
+        button.texture = SKTexture(imageNamed: "theme-button")
+        button.position = CGPoint(x: self.size.width / 2 + 96 + 10, y: self.size.height / 2)
+        button.onTap = { [weak self] button in
+            guard let sself = self else { return }
+            sself.backgroundIndex =  (sself.backgroundIndex + 1) % AppColor.boardBackground.count
+        }
+    }
+
+    func onStartTapped() {
+        if self.gameState == .paused {
+            unPauseGame()
+        } else if self.gameState == .waitingToStart {
+            createRunningGameBoard()
+        }
+        addPauseButton()
     }
 
     func addPauseButton() {
@@ -124,19 +154,26 @@ class MathPongScene: SKScene {
         button.alpha = 0.4
         button.position = CGPoint(x: self.size.width / 2, y: self.size.height / 2)
         button.onTap = { [weak self] button in
-            button.removeFromParent()
-            self?.pauseGame()
-            self?.addStartButton()
+            self?.onPauseTapped()
         }
     }
 
+    func onPauseTapped() {
+        pauseGame()
+        addStartButton()
+    }
+
     func createRunningGameBoard() {
+        resetScore()
+        createProblem()
+        self.gameState = .running
+    }
+
+    func resetScore() {
         self.players[0].score = 0
         self.players[1].score = 0
         self.scoreNodes[0].text = "0"
         self.scoreNodes[1].text = "0"
-        createProblem()
-        self.gameState = .running
     }
 
     func createPlayerLine(yPosition: CGFloat, playerIndex: Int) {
@@ -193,7 +230,7 @@ class MathPongScene: SKScene {
         problemNode.position = CGPoint(x: self.size.width / 2, y: self.size.height / 2)
         problemNode.addChild(label)
 
-        updateProblem()
+        didSetCurrentProblem()
     }
 
     func problemPhysicsBody(size: CGSize) -> SKPhysicsBody {
@@ -236,7 +273,7 @@ class MathPongScene: SKScene {
         }
     }
 
-    func updateProblem() {
+    func didSetCurrentProblem() {
         guard
             let problemNode = self.problemNode as? SKSpriteNode,
             let label = problemNode.children[0] as? SKLabelNode
@@ -317,7 +354,7 @@ class MathPongScene: SKScene {
     func gameOver() {
         self.problemNode?.removeFromParent()
         self.problemNode = nil
-        addStartButton()
+        addWaitingToStartButtons()
         self.gameState = .waitingToStart
     }
 
