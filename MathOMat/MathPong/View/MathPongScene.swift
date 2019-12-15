@@ -20,14 +20,14 @@ class MathPongScene: SKScene {
     var opButtons = [MathPongButtonNode]()
     var currentOpIndex = 0 {
         didSet {
-            UserDefaults.standard.set(backgroundIndex, forKey: Constants.settingCurrentOp)
-
+            UserDefaults.standard.set(currentOpIndex, forKey: Constants.settingKey.currentOpIndex)
+            resetOperatorButtons()
         }
     }
 
     var backgroundIndex = 0 {
         didSet {
-            UserDefaults.standard.set(backgroundIndex, forKey: Constants.settingBackground)
+            UserDefaults.standard.set(backgroundIndex, forKey: Constants.settingKey.backgroundIndex)
             self.backgroundColor = AppColor.boardBackground[backgroundIndex]
         }
     }
@@ -58,8 +58,9 @@ class MathPongScene: SKScene {
         static let categoryGuide: UInt32 = 0b0010
         static let fontName = "Courier"
         static let sideInset: CGFloat = 5
-        static let settingBackground = "math-pong.settingBackground"
-        static let settingCurrentOp = "math-pong.settingCurrentOp"
+        static let settingKey = (
+            backgroundIndex: "math-pong.settingKey.backgroundIndex",
+            currentOpIndex: "math-pong.settingKey.currentOpIndex")
         static let smallButtonSize = CGSize(width: 64, height: 64)
     }
 
@@ -74,9 +75,10 @@ class MathPongScene: SKScene {
     let loseSoundAction = SKAction.playSoundFileNamed("lose", waitForCompletion: false)
 
     override init(size: CGSize) {
+        self.backgroundIndex = UserDefaults.standard.integer(forKey: Constants.settingKey.backgroundIndex)
+        self.currentOpIndex = UserDefaults.standard.integer(forKey: Constants.settingKey.currentOpIndex)
+
         self.currentProblem = self.data[currentOpIndex].getNextProblem()
-        self.backgroundIndex = UserDefaults.standard.integer(forKey: Constants.settingBackground)
-        self.currentOpIndex = UserDefaults.standard.integer(forKey: Constants.settingCurrentOp)
         super.init(size: size)
 
         self.physicsWorld.contactDelegate = self
@@ -186,7 +188,6 @@ class MathPongScene: SKScene {
         button.onTap = { [weak self] button in
             guard let sself = self else { return }
             sself.currentOpIndex = (Operators.allCases.firstIndex { $0.rawValue == button.name }) ?? 0
-            sself.resetOperatorButtons()
             sself.currentProblem = sself.data[sself.currentOpIndex].getNextProblem()
         }
         return button
