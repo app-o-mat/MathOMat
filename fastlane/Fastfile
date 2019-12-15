@@ -1,5 +1,5 @@
 lane :build_appstore do
-  xcversion(version: "11.2.1")
+  xcversion(version: "11.3")
 
   gym(
     scheme: "MathOMat",
@@ -13,7 +13,7 @@ lane :build_appstore do
 end
 
 lane :build_adhoc do
-  xcversion(version: "11.2.1")
+  xcversion(version: "11.3")
 
   gym(
     scheme: "MathOMat",
@@ -27,7 +27,7 @@ lane :build_adhoc do
 end
 
 lane :unit_tests do
-  xcversion(version: "11.2.1")
+  xcversion(version: "11.3")
 
   run_tests(scheme: "MathOMat")
 
