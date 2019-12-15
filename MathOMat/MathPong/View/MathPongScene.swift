@@ -486,11 +486,14 @@ extension MathPongScene: SKPhysicsContactDelegate {
         return nil
     }
 
+    private func playerDidMiss(_ contact: SKPhysicsContact, playerIndex: Int) -> Bool {
+        return node(named: Constants.playerLineName[playerIndex], contact: contact) != nil
+            && currentPlayer == playerIndex
+    }
+
     func didBegin(_ contact: SKPhysicsContact) {
         guard node(named: Constants.problemName, contact: contact) != nil else { return }
-        if node(named: Constants.playerLineName[0], contact: contact) != nil {
-            currentPlayerMisses()
-        } else if node(named: Constants.playerLineName[1], contact: contact) != nil {
+        if playerDidMiss(contact, playerIndex: currentPlayer) {
             currentPlayerMisses()
         } else if node(named: Constants.buttonLineName[currentPlayer], contact: contact) != nil {
             createButtons()
