@@ -16,6 +16,7 @@ class MathPongScene: SKScene {
     var startButton: MathPongButtonNode?
     var pauseButton: MathPongButtonNode?
     var themeButton: MathPongButtonNode?
+    var resetButton: MathPongButtonNode?
 
     var opButtons = [MathPongButtonNode]()
     var currentOpIndex = 0 {
@@ -146,6 +147,8 @@ class MathPongScene: SKScene {
         self.startButton = nil
         self.themeButton?.removeFromParent()
         self.themeButton = nil
+        self.resetButton?.removeFromParent()
+        self.resetButton = nil
         removeOperatorButtons()
     }
 
@@ -175,6 +178,20 @@ class MathPongScene: SKScene {
         button.onTap = { [weak self] button in
             guard let sself = self else { return }
             sself.backgroundIndex =  (sself.backgroundIndex + 1) % AppColor.boardBackground.count
+        }
+    }
+
+    func addResetButton() {
+        let button = MathPongButtonNode(
+            color: AppColor.imageButtonBackground,
+            size: Constants.smallButtonSize)
+        self.resetButton = button
+        addChild(button)
+        button.texture = SKTexture(imageNamed: "reset-button")
+        button.position = CGPoint(x: self.size.width / 2 + 96 + 10, y: self.size.height / 2)
+        button.onTap = { [weak self] button in
+            guard let sself = self else { return }
+            sself.reset()
         }
     }
 
@@ -247,6 +264,7 @@ class MathPongScene: SKScene {
     func onPauseTapped() {
         pauseGame()
         addStartButton()
+        addResetButton()
     }
 
     func createRunningGameBoard() {
@@ -442,6 +460,11 @@ class MathPongScene: SKScene {
         self.problemNode = nil
         addWaitingToStartButtons()
         self.gameState = .waitingToStart
+    }
+
+    func reset() {
+        unPauseGame()
+        gameOver()
     }
 
     func pauseGame() {
