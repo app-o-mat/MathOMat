@@ -10,6 +10,7 @@
 		9A0A4BEA239DE2400062F5BE /* win.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 9A0A4BE9239DE2400062F5BE /* win.mp3 */; };
 		9A0A4BEC239DE29A0062F5BE /* lose.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 9A0A4BEB239DE29A0062F5BE /* lose.mp3 */; };
 		9A0A4BEF239EC7E00062F5BE /* Colors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A0A4BEE239EC7E00062F5BE /* Colors.swift */; };
+		9A1FD00F23A6606D00150B17 /* MathOperatorData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A1FD00E23A6606D00150B17 /* MathOperatorData.swift */; };
 		9A3F957F239D416700A349D2 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A3F957E239D416700A349D2 /* AppDelegate.swift */; };
 		9A3F9585239D416700A349D2 /* MathPongScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A3F9584239D416700A349D2 /* MathPongScene.swift */; };
 		9A3F9587239D416700A349D2 /* MathPongSceneViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A3F9586239D416700A349D2 /* MathPongSceneViewController.swift */; };
@@ -36,6 +37,7 @@
 		9A0A4BE9239DE2400062F5BE /* win.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = win.mp3; sourceTree = "<group>"; };
 		9A0A4BEB239DE29A0062F5BE /* lose.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = lose.mp3; sourceTree = "<group>"; };
 		9A0A4BEE239EC7E00062F5BE /* Colors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Colors.swift; sourceTree = "<group>"; };
+		9A1FD00E23A6606D00150B17 /* MathOperatorData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MathOperatorData.swift; sourceTree = "<group>"; };
 		9A3F957B239D416700A349D2 /* MathOMat.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MathOMat.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9A3F957E239D416700A349D2 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		9A3F9584239D416700A349D2 /* MathPongScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MathPongScene.swift; sourceTree = "<group>"; };
@@ -153,6 +155,7 @@
 			isa = PBXGroup;
 			children = (
 				9A3F95A8239D451400A349D2 /* MathPongGameData.swift */,
+				9A1FD00E23A6606D00150B17 /* MathOperatorData.swift */,
 			);
 			path = Game;
 			sourceTree = "<group>";
@@ -283,6 +286,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				9A952DE9239DD44A009406D6 /* MathPongPlayer.swift in Sources */,
+				9A1FD00F23A6606D00150B17 /* MathOperatorData.swift in Sources */,
 				9A952DE7239DAF60009406D6 /* MathPongButtonNode.swift in Sources */,
 				9A3F9585239D416700A349D2 /* MathPongScene.swift in Sources */,
 				9A0A4BEF239EC7E00062F5BE /* Colors.swift in Sources */,
