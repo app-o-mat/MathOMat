@@ -2,10 +2,13 @@ identifier_name:
   excluded:
     - km
     - i
+    - op
+    - on
 
 disabled_rules:
   - trailing_comma
   - type_body_length
-  
+  - file_length
+
 excluded:
   - Carthage
