@@ -85,10 +85,36 @@ class MathPongScene: SKScene {
         self.physicsWorld.gravity = CGVector(dx: 0, dy: 0)
 
         self.backgroundColor = AppColor.boardBackground[backgroundIndex]
+
+        subscribeToAppEvents()
     }
 
     @available(*, unavailable)
     required init?(coder aDecoder: NSCoder) { fatalError("init(coder:) has not been implemented") }
+
+    // App Events
+    private func subscribeToAppEvents() {
+        let notificationCenter = NotificationCenter.default
+        notificationCenter.addObserver(self,
+                                       selector: #selector(appBecameActive),
+                                       name: UIApplication.didBecomeActiveNotification, object: nil)
+        notificationCenter.addObserver(self,
+                                       selector: #selector(appResignActive),
+                                       name: UIApplication.willResignActiveNotification, object: nil)
+    }
+
+    @objc private func appBecameActive() {
+        if self.gameState != .waitingToStart {
+            pauseGame()
+            addStartButton()
+        }
+    }
+
+    @objc private func appResignActive() {
+        if self.gameState != .waitingToStart {
+            pauseGame()
+        }
+    }
 
     func startGame() {
         createGameBoard()
