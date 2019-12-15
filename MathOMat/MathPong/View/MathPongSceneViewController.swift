@@ -30,8 +30,7 @@ class MathPongSceneViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         if let skView = view as? SKView {
-            self.scene = MathPongScene(size: view.frame.size,
-                                       data: MultiplicationData())
+            self.scene = MathPongScene(size: view.frame.size)
             skView.presentScene(self.scene)
         }
     }

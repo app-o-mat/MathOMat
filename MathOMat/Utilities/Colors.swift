@@ -40,7 +40,7 @@ enum AppColor {
          UIColor(hue: 0.25, saturation: 0.50, brightness: 0.5, alpha: 1.0),
          UIColor(hue: 0.15, saturation: 0.50, brightness: 0.75, alpha: 1.0),
          ]
-    static let startButtonBackground = UIColor.clear
+    static let imageButtonBackground = UIColor.clear
 
     static let boundaryColor = UIColor.white
     static let guideColor = UIColor.white
