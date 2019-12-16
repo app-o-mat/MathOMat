@@ -1,1 +1,1 @@
-Math Game
+Two-player math practice game

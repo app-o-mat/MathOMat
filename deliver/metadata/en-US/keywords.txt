@@ -1,1 +1,1 @@
-math,game,times,table,multiplication
+math,game,times,table,multiplication,addition,arithmetic,pong
