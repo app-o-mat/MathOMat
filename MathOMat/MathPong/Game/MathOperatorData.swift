@@ -17,13 +17,23 @@ class AdditionData: MathPongGameData {
 
         let sum = add1 + add2
         var wrongAnswers = [
-            "\(sum + 1)", "\(sum - 1)",
-            "\(sum + 2)", "\(sum - 2)",
-            "\(sum + 3)", "\(sum - 3)",
+            "\(sum + 1)",
+            "\(sum + 2)",
+            "\(sum + 3)",
             "\(sum + add1)", "\(sum + add2)",
             "\(sum - add1)", "\(sum - add2)",
             "\(add1 * add2)",
         ]
+
+        if sum >= 1 {
+            wrongAnswers.append("\(sum - 1)")
+            if sum >= 2 {
+                wrongAnswers.append("\(sum - 2)")
+                if sum >= 3 {
+                    wrongAnswers.append("\(sum - 3)")
+                }
+            }
+        }
 
         wrongAnswers.removeAll { "\(sum)" == $0 }
 
