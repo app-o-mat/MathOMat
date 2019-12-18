@@ -9,20 +9,20 @@
 import Foundation
 import GameplayKit
 
-class AdditionData: MathPongGameData {
+class AdditionData: MathPongGameData, MathPongGameWithOperandsData {
+    func correctAnswer(operand1: Int, operand2: Int) -> String {
+        return "\(operand1 + operand2)"
+    }
 
-    func getNextProblem() -> MathPongProblem {
-        let add1 = GKRandomSource.sharedRandom().nextInt(upperBound: 11)
-        let add2 = GKRandomSource.sharedRandom().nextInt(upperBound: 11)
-
-        let sum = add1 + add2
+    func wrongAnswers(operand1: Int, operand2: Int) -> Set<String> {
+        let sum = operand1 + operand2
         var wrongAnswers = [
             "\(sum + 1)",
             "\(sum + 2)",
             "\(sum + 3)",
-            "\(sum + add1)", "\(sum + add2)",
-            "\(sum - add1)", "\(sum - add2)",
-            "\(add1 * add2)",
+            "\(sum + operand1)", "\(sum + operand2)",
+            "\(sum - operand1)", "\(sum - operand2)",
+            "\(operand1 * operand2)",
         ]
 
         if sum >= 1 {
@@ -36,77 +36,111 @@ class AdditionData: MathPongGameData {
         }
 
         wrongAnswers.removeAll { "\(sum)" == $0 }
+        return Set(wrongAnswers)
+    }
 
-        return MathPongProblem(question: "\(add1) + \(add2)", answer: "\(sum)",
-            wrongAnswers: Set(wrongAnswers))
+    func getNextProblem() -> MathPongProblem {
+        let add1 = GKRandomSource.sharedRandom().nextInt(upperBound: 11)
+        let add2 = GKRandomSource.sharedRandom().nextInt(upperBound: 11)
+
+        return MathPongProblem(question: "\(add1) + \(add2)",
+            answer: correctAnswer(operand1: add1, operand2: add2),
+            wrongAnswers: wrongAnswers(operand1: add1, operand2: add2))
     }
 }
 
-class MinusData: MathPongGameData {
+class MinusData: MathPongGameData, MathPongGameWithOperandsData {
+
+    func correctAnswer(operand1: Int, operand2: Int) -> String {
+        return "\(operand1)"
+    }
+
+    func wrongAnswers(operand1: Int, operand2: Int) -> Set<String> {
+        var wrongAnswers = [
+            "\(operand1 + 1)", "\(operand2)",
+            "\(operand1 + 2)",
+        ]
+
+        if operand1 >= 1 {
+            wrongAnswers.append("\(operand1 - 1)")
+            if operand1 >= 2 {
+                wrongAnswers.append("\(operand1 - 2)")
+            }
+        }
+
+        wrongAnswers.removeAll { "\(operand1)" == $0 }
+        return Set(wrongAnswers)
+    }
 
     func getNextProblem() -> MathPongProblem {
         let add1 = GKRandomSource.sharedRandom().nextInt(upperBound: 11)
         let add2 = GKRandomSource.sharedRandom().nextInt(upperBound: 11)
 
         let sum = add1 + add2
-        var wrongAnswers = [
-            "\(add1 + 1)", "\(add2)",
-            "\(add1 + 2)",
-        ]
 
-        if add1 >= 1 {
-            wrongAnswers.append("\(add1 - 1)")
-            if add1 >= 2 {
-                wrongAnswers.append("\(add1 - 2)")
-            }
-        }
-
-        wrongAnswers.removeAll { "\(add1)" == $0 }
-
-        return MathPongProblem(question: "\(sum) - \(add2)", answer: "\(add1)",
-            wrongAnswers: Set(wrongAnswers))
+        return MathPongProblem(question: "\(sum) - \(add2)",
+            answer: correctAnswer(operand1: add1, operand2: add2),
+            wrongAnswers: wrongAnswers(operand1: add1, operand2: add2))
     }
 }
 
-class MultiplicationData: MathPongGameData {
+class MultiplicationData: MathPongGameData, MathPongGameWithOperandsData {
 
-    func getNextProblem() -> MathPongProblem {
-        let mult1 = GKRandomSource.sharedRandom().nextInt(upperBound: 11) + 2
-        let mult2 = GKRandomSource.sharedRandom().nextInt(upperBound: 11) + 2
+    func correctAnswer(operand1: Int, operand2: Int) -> String {
+        return "\(operand1 * operand2)"
+    }
 
-        let product = mult1 * mult2
+    func wrongAnswers(operand1: Int, operand2: Int) -> Set<String> {
+        let product = operand1 * operand2
         var wrongAnswers = [
             "\(product + 1)", "\(product - 1)",
             "\(product + 2)", "\(product - 2)",
             "\(product + 3)", "\(product - 3)",
-            "\(product + mult1)", "\(product + mult2)",
-            "\(product - mult1)", "\(product - mult2)",
-            "\(mult1 + mult2)",
+            "\(product + operand1)", "\(product + operand2)",
+            "\(product - operand1)", "\(product - operand2)",
+            "\(operand1 + operand2)",
         ]
 
         wrongAnswers.removeAll { "\(product)" == $0 }
 
-        return MathPongProblem(question: "\(mult1) × \(mult2)", answer: "\(product)",
-            wrongAnswers: Set(wrongAnswers))
+        return Set(wrongAnswers)
+    }
+
+    func getNextProblem() -> MathPongProblem {
+        let mult1 = GKRandomSource.sharedRandom().nextInt(upperBound: 11) + 2
+        let mult2 = GKRandomSource.sharedRandom().nextInt(upperBound: 11) + 2
+
+        return MathPongProblem(question: "\(mult1) × \(mult2)",
+            answer: correctAnswer(operand1: mult1, operand2: mult2),
+            wrongAnswers: wrongAnswers(operand1: mult1, operand2: mult2))
     }
 }
 
-class DivisionData: MathPongGameData {
+class DivisionData: MathPongGameData, MathPongGameWithOperandsData {
+
+    func correctAnswer(operand1: Int, operand2: Int) -> String {
+        return "\(operand1)"
+    }
+
+    func wrongAnswers(operand1: Int, operand2: Int) -> Set<String> {
+        let product = operand1 * operand2
+        var wrongAnswers = [
+            "\(operand1 + 1)", "\(operand1 - 1)",
+            "\(operand1 + 2)", "\(operand1 - 2)",
+            "\(product - operand2)",
+        ]
+
+        wrongAnswers.removeAll { "\(operand1)" == $0 }
+        return Set(wrongAnswers)
+    }
 
     func getNextProblem() -> MathPongProblem {
         let mult1 = GKRandomSource.sharedRandom().nextInt(upperBound: 11) + 2
         let mult2 = GKRandomSource.sharedRandom().nextInt(upperBound: 11) + 2
 
         let product = mult1 * mult2
-        var wrongAnswers = [
-            "\(mult1 + 1)", "\(mult1 - 1)",
-            "\(mult1 + 2)", "\(mult1 - 2)",
-            "\(product - mult2)",
-        ]
-
-        wrongAnswers.removeAll { "\(mult1)" == $0 }
-
-        return MathPongProblem(question: "\(product) ÷ \(mult2)", answer: "\(mult1)",
-            wrongAnswers: Set(wrongAnswers))
+        return MathPongProblem(question: "\(product) ÷ \(mult2)",
+            answer: correctAnswer(operand1: mult1, operand2: mult2),
+            wrongAnswers: wrongAnswers(operand1: mult1, operand2: mult2))
     }
 }

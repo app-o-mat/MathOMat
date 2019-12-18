@@ -19,3 +19,8 @@ struct MathPongProblem {
 protocol MathPongGameData {
     func getNextProblem() -> MathPongProblem
 }
+
+protocol MathPongGameWithOperandsData {
+    func correctAnswer(operand1: Int, operand2: Int) -> String
+    func wrongAnswers(operand1: Int, operand2: Int) -> Set<String>
+}
