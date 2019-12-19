@@ -1,5 +1,5 @@
 //
-//  MathOperatorData.swift
+//  MathOperatorProblems.swift
 //  MathOMat
 //
 //  Created by Louis Franco on 12/15/19.
@@ -8,6 +8,42 @@
 
 import Foundation
 import GameplayKit
+
+enum MathOperator: String, CaseIterable {
+    case add
+    case minus
+    case mult
+    case div
+
+    private func generator() -> ProblemGenerator {
+        switch self {
+        case .add:
+            return AdditionProblems()
+        case .minus:
+            return MinusProblems()
+        case .mult:
+            return MultiplicationProblems()
+        case .div:
+            return DivisionProblems()
+        }
+    }
+
+    static func at(index: Int) -> MathOperator {
+        return MathOperator.allCases[index]
+    }
+
+    static func named(name: String?) -> MathOperator? {
+        MathOperator.allCases.first { $0.rawValue == name }
+    }
+
+    func index() -> Int {
+        return MathOperator.allCases.firstIndex(of: self) ?? 0
+    }
+
+    func getNextProblem() -> Problem {
+        return generator().getNextProblem()
+    }
+}
 
 class AdditionProblems: ProblemGenerator, ProblemFromOperands {
     let smallestOperand = 0

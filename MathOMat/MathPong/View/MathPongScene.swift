@@ -21,9 +21,9 @@ class MathPongScene: SKScene {
     var resetButton: ColorButtonNode?
 
     var opButtons = [ColorButtonNode]()
-    var currentOpIndex = 0 {
+    var currentOp: MathOperator = MathOperator.add {
         didSet {
-            UserDefaults.standard.set(currentOpIndex, forKey: Constants.settingKey.currentOpIndex)
+            UserDefaults.standard.set(currentOp.index(), forKey: Constants.settingKey.currentOpIndex)
             resetOperatorButtons()
         }
     }
@@ -39,13 +39,6 @@ class MathPongScene: SKScene {
     let players = [
         MathPongPlayer(problemRotation: 0, position: .bottom),
         MathPongPlayer(problemRotation: .pi, position: .top)]
-
-    let data: [ProblemGenerator] = [
-        AdditionProblems(),
-        MinusProblems(),
-        MultiplicationProblems(),
-        DivisionProblems(),
-    ]
 
     var currentProblem: Problem {
         didSet {
@@ -79,9 +72,10 @@ class MathPongScene: SKScene {
 
     override init(size: CGSize) {
         self.backgroundIndex = UserDefaults.standard.integer(forKey: Constants.settingKey.backgroundIndex)
-        self.currentOpIndex = UserDefaults.standard.integer(forKey: Constants.settingKey.currentOpIndex)
+        let opIndex = UserDefaults.standard.integer(forKey: Constants.settingKey.currentOpIndex)
+        self.currentOp = MathOperator.at(index: opIndex)
 
-        self.currentProblem = self.data[currentOpIndex].getNextProblem()
+        self.currentProblem = currentOp.getNextProblem()
         super.init(size: size)
 
         self.physicsWorld.contactDelegate = self
@@ -197,17 +191,11 @@ class MathPongScene: SKScene {
         }
     }
 
-    enum Operators: String, CaseIterable {
-        case add
-        case minus
-        case mult
-        case div
-    }
-
     func addOperatorButtons() {
         var startPos = CGPoint(x: self.size.width / 2 - 96 - 10, y: self.size.height / 2 + 32 + 64 + 15)
-        for (i, op) in Operators.allCases.enumerated() {
-            self.opButtons.append(addOperatorButton(opName: op.rawValue, position: startPos, on: currentOpIndex == i))
+        for op in MathOperator.allCases {
+            self.opButtons.append(
+                addOperatorButton(opName: op.rawValue, position: startPos, on: currentOp == op))
             startPos.y -= 64 + 10
         }
     }
@@ -232,8 +220,8 @@ class MathPongScene: SKScene {
         button.name = opName
         button.onTap = { [weak self] button in
             guard let sself = self else { return }
-            sself.currentOpIndex = (Operators.allCases.firstIndex { $0.rawValue == button.name }) ?? 0
-            sself.currentProblem = sself.data[sself.currentOpIndex].getNextProblem()
+            sself.currentOp = MathOperator.named(name: button.name) ?? MathOperator.add
+            sself.currentProblem = sself.currentOp.getNextProblem()
         }
         return button
     }
@@ -424,7 +412,7 @@ class MathPongScene: SKScene {
         self.currentPlayer = 1 - self.currentPlayer
         self.problemNode?.physicsBody?.velocity = CGVector(dx: velocity.dx * 1.1, dy: -velocity.dy * 1.1)
 
-        self.currentProblem = self.data[currentOpIndex].getNextProblem()
+        self.currentProblem = self.currentOp.getNextProblem()
     }
 
     func currentPlayerMisses() {
@@ -439,7 +427,7 @@ class MathPongScene: SKScene {
         self.problemNode?.physicsBody = nil
         self.problemNode?.position = CGPoint(x: self.size.width / 2, y: self.size.height / 2)
 
-        self.currentProblem = self.data[currentOpIndex].getNextProblem()
+        self.currentProblem = self.currentOp.getNextProblem()
     }
 
     func initialVelocity() -> CGVector {
