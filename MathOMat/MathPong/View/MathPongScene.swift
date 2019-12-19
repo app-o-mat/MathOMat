@@ -10,6 +10,8 @@ import SpriteKit
 import GameplayKit
 
 class MathPongScene: SKScene {
+    let gamePhysics = GamePhysics()
+
     var problemNode: SKNode?
     var scoreNodes = [SKLabelNode(), SKLabelNode()]
 
@@ -55,9 +57,9 @@ class MathPongScene: SKScene {
         static let problemName = "problem"
         static let playerLineName = ["player1line", "player2line"]
         static let buttonLineName = ["button1line", "button2line"]
-        static let categoryObject: UInt32 = 0b0001
-        static let categoryGuide: UInt32 = 0b0010
+
         static let fontName = "Courier"
+
         static let sideInset: CGFloat = 5
         static let settingKey = (
             backgroundIndex: "math-pong.settingKey.backgroundIndex",
@@ -288,10 +290,9 @@ class MathPongScene: SKScene {
         boundary.lineWidth = 5
         boundary.strokeColor = AppColor.boundaryColor
         boundary.name = Constants.playerLineName[playerIndex]
-        setupAsBoundary(line: boundary)
 
-        boundary.physicsBody?.categoryBitMask = Constants.categoryGuide
-        boundary.physicsBody?.collisionBitMask = Constants.categoryGuide
+        gamePhysics.setupAsBoundary(node: boundary, path: path)
+        gamePhysics.setupAsGuide(node: boundary)
 
         addChild(boundary)
 
@@ -308,14 +309,14 @@ class MathPongScene: SKScene {
         let path = CGMutablePath()
         path.move(to: CGPoint(x: Constants.sideInset, y: yPosition))
         path.addLine(to: CGPoint(x: self.size.width - Constants.sideInset, y: yPosition))
+
         let guide = SKShapeNode(path: path)
         guide.lineWidth = 1
         guide.strokeColor = AppColor.guideColor
         guide.name = Constants.buttonLineName[playerIndex]
-        guide.physicsBody = SKPhysicsBody(edgeChainFrom: guide.path!)
 
-        guide.physicsBody?.categoryBitMask = Constants.categoryGuide
-        guide.physicsBody?.collisionBitMask = Constants.categoryGuide
+        gamePhysics.setupAsBoundary(node: guide, path: path)
+        gamePhysics.setupAsGuide(node: guide)
 
         addChild(guide)
     }
@@ -342,11 +343,10 @@ class MathPongScene: SKScene {
 
         physicsBody.usesPreciseCollisionDetection = true
         physicsBody.linearDamping = 0.0
-        physicsBody.contactTestBitMask = Constants.categoryGuide | Constants.categoryObject
+        physicsBody.contactTestBitMask = GamePhysics.categoryGuide | GamePhysics.categoryObject
         physicsBody.allowsRotation = false
 
-        physicsBody.categoryBitMask = Constants.categoryObject
-        physicsBody.collisionBitMask = Constants.categoryObject
+        gamePhysics.setupAsObject(physicsBody: physicsBody)
         physicsBody.velocity = initialVelocity()
 
         return physicsBody
@@ -409,20 +409,11 @@ class MathPongScene: SKScene {
         let boundary = SKShapeNode(path: path)
         boundary.lineWidth = 2
         boundary.strokeColor = AppColor.boundaryColor
-        setupAsBoundary(line: boundary)
 
-        boundary.physicsBody?.categoryBitMask = Constants.categoryObject
-        boundary.physicsBody?.collisionBitMask = Constants.categoryObject
+        gamePhysics.setupAsBoundary(node: boundary, path: path)
+        gamePhysics.setupAsObject(node: boundary)
 
         addChild(boundary)
-    }
-
-    func setupAsBoundary(line: SKShapeNode) {
-        line.physicsBody = SKPhysicsBody(edgeChainFrom: line.path!)
-        line.physicsBody?.restitution = 1.0
-        line.physicsBody?.isDynamic = false
-        line.physicsBody?.friction = 0
-        line.physicsBody?.usesPreciseCollisionDetection = true
     }
 
     func currentPlayerHits() {
