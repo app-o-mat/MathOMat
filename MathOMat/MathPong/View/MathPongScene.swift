@@ -109,6 +109,7 @@ class MathPongScene: SKScene {
     @objc private func appBecameActive() {
         if self.gameState != .waitingToStart {
             pauseGame()
+            removeControlButtons()
             addStartButton()
         }
     }
@@ -125,6 +126,7 @@ class MathPongScene: SKScene {
     }
 
     func addWaitingToStartButtons() {
+        removeControlButtons()
         addStartButton()
         addThemeButton()
         addOperatorButtons()
@@ -155,8 +157,6 @@ class MathPongScene: SKScene {
     }
 
     func addStartButton() {
-        removeControlButtons()
-
         let button = MathPongButtonNode(
             color: AppColor.imageButtonBackground,
             size: CGSize(width: 128, height: 128))
@@ -265,6 +265,7 @@ class MathPongScene: SKScene {
 
     func onPauseTapped() {
         pauseGame()
+        removeControlButtons()
         addStartButton()
         addResetButton()
     }
