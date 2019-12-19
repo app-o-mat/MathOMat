@@ -15,12 +15,12 @@ class MathPongScene: SKScene {
     var problemNode: SKNode?
     var scoreNodes = [SKLabelNode(), SKLabelNode()]
 
-    var startButton: MathPongButtonNode?
-    var pauseButton: MathPongButtonNode?
-    var themeButton: MathPongButtonNode?
-    var resetButton: MathPongButtonNode?
+    var startButton: ColorButtonNode?
+    var pauseButton: ColorButtonNode?
+    var themeButton: ColorButtonNode?
+    var resetButton: ColorButtonNode?
 
-    var opButtons = [MathPongButtonNode]()
+    var opButtons = [ColorButtonNode]()
     var currentOpIndex = 0 {
         didSet {
             UserDefaults.standard.set(currentOpIndex, forKey: Constants.settingKey.currentOpIndex)
@@ -40,14 +40,14 @@ class MathPongScene: SKScene {
         MathPongPlayer(problemRotation: 0, position: .bottom),
         MathPongPlayer(problemRotation: .pi, position: .top)]
 
-    let data: [MathPongGameData] = [
-        AdditionData(),
-        MinusData(),
-        MultiplicationData(),
-        DivisionData(),
+    let data: [ProblemGenerator] = [
+        AdditionProblems(),
+        MinusProblems(),
+        MultiplicationProblems(),
+        DivisionProblems(),
     ]
 
-    var currentProblem: MathPongProblem {
+    var currentProblem: Problem {
         didSet {
             didSetCurrentProblem()
         }
@@ -157,7 +157,7 @@ class MathPongScene: SKScene {
     }
 
     func addStartButton() {
-        let button = MathPongButtonNode(
+        let button = ColorButtonNode(
             color: AppColor.imageButtonBackground,
             size: CGSize(width: 128, height: 128))
         self.startButton = button
@@ -170,7 +170,7 @@ class MathPongScene: SKScene {
     }
 
     func addThemeButton() {
-        let button = MathPongButtonNode(
+        let button = ColorButtonNode(
             color: AppColor.imageButtonBackground,
             size: Constants.smallButtonSize)
         self.themeButton = button
@@ -184,7 +184,7 @@ class MathPongScene: SKScene {
     }
 
     func addResetButton() {
-        let button = MathPongButtonNode(
+        let button = ColorButtonNode(
             color: AppColor.imageButtonBackground,
             size: Constants.smallButtonSize)
         self.resetButton = button
@@ -222,8 +222,8 @@ class MathPongScene: SKScene {
         self.opButtons = []
     }
 
-    func addOperatorButton(opName: String, position: CGPoint, on: Bool) -> MathPongButtonNode {
-        let button = MathPongButtonNode(
+    func addOperatorButton(opName: String, position: CGPoint, on: Bool) -> ColorButtonNode {
+        let button = ColorButtonNode(
             color: AppColor.imageButtonBackground,
             size: Constants.smallButtonSize)
         addChild(button)
@@ -250,7 +250,7 @@ class MathPongScene: SKScene {
     func addPauseButton() {
         removeControlButtons()
 
-        let button = MathPongButtonNode(
+        let button = ColorButtonNode(
             color: AppColor.imageButtonBackground,
             size: CGSize(width: 128, height: 128))
         self.pauseButton = button

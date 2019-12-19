@@ -1,5 +1,5 @@
 //
-//  AnswerButtonNode.swift
+//  ColorButtonNode.swift
 //  MathOMat
 //
 //  Created by Louis Franco on 12/8/19.
@@ -9,10 +9,10 @@
 import Foundation
 import SpriteKit
 
-class MathPongButtonNode: SKSpriteNode {
+class ColorButtonNode: SKSpriteNode {
     private let labelNode = SKLabelNode()
     private let flipped: Bool
-    var onTap: ((MathPongButtonNode) -> Void)?
+    var onTap: ((ColorButtonNode) -> Void)?
 
     public var text: String? {
         get { return labelNode.text }

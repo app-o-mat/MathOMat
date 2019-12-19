@@ -11,7 +11,7 @@ import XCTest
 
 class MathOMatTests: XCTestCase {
 
-    func testDataNoNegative(data: MathPongGameWithOperandsData, lowerBound: Int = 0) {
+    func testDataNoNegative(data: ProblemFromOperands, lowerBound: Int = 0) {
         for add1 in lowerBound..<100 {
             for add2 in lowerBound..<100 {
                 let wrongAnswers = data.wrongAnswers(operand1: add1, operand2: add2)
@@ -20,7 +20,7 @@ class MathOMatTests: XCTestCase {
         }
     }
 
-    func testDataOnlyWrong(data: MathPongGameWithOperandsData, lowerBound: Int = 0) {
+    func testDataOnlyWrong(data: ProblemFromOperands, lowerBound: Int = 0) {
         for add1 in lowerBound..<100 {
             for add2 in lowerBound..<100 {
                 let correct = data.correctAnswer(operand1: add1, operand2: add2)
@@ -31,35 +31,35 @@ class MathOMatTests: XCTestCase {
     }
 
     func testAdditionDataNoNegative() {
-        testDataNoNegative(data: AdditionData())
+        testDataNoNegative(data: AdditionProblems())
     }
 
     func testAdditionDataOnlyWrong() {
-        testDataOnlyWrong(data: AdditionData())
+        testDataOnlyWrong(data: AdditionProblems())
     }
 
     func testMinusDataNoNegative() {
-        testDataNoNegative(data: MinusData())
+        testDataNoNegative(data: MinusProblems())
     }
 
     func testMinusDataOnlyWrong() {
-        testDataOnlyWrong(data: MinusData())
+        testDataOnlyWrong(data: MinusProblems())
     }
 
     func testMultiplicationDataNoNegative() {
-        testDataNoNegative(data: MultiplicationData(), lowerBound: 2)
+        testDataNoNegative(data: MultiplicationProblems(), lowerBound: 2)
     }
 
     func testMultiplicationDataOnlyWrong() {
-        testDataOnlyWrong(data: MultiplicationData(), lowerBound: 2)
+        testDataOnlyWrong(data: MultiplicationProblems(), lowerBound: 2)
     }
 
     func testDivisionDataNoNegative() {
-        testDataNoNegative(data: DivisionData(), lowerBound: 2)
+        testDataNoNegative(data: DivisionProblems(), lowerBound: 2)
     }
 
     func testDivisionDataOnlyWrong() {
-        testDataOnlyWrong(data: DivisionData(), lowerBound: 2)
+        testDataOnlyWrong(data: DivisionProblems(), lowerBound: 2)
     }
 
 }

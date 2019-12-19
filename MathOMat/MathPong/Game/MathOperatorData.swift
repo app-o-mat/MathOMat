@@ -9,7 +9,14 @@
 import Foundation
 import GameplayKit
 
-class AdditionData: MathPongGameData, MathPongGameWithOperandsData {
+class AdditionProblems: ProblemGenerator, ProblemFromOperands {
+    let smallestOperand = 0
+    let biggestOperand = 10
+
+    func question(operand1: Int, operand2: Int) -> String {
+        return "\(operand1) + \(operand2)"
+    }
+
     func correctAnswer(operand1: Int, operand2: Int) -> String {
         return "\(operand1 + operand2)"
     }
@@ -39,17 +46,15 @@ class AdditionData: MathPongGameData, MathPongGameWithOperandsData {
         return Set(wrongAnswers)
     }
 
-    func getNextProblem() -> MathPongProblem {
-        let add1 = GKRandomSource.sharedRandom().nextInt(upperBound: 11)
-        let add2 = GKRandomSource.sharedRandom().nextInt(upperBound: 11)
-
-        return MathPongProblem(question: "\(add1) + \(add2)",
-            answer: correctAnswer(operand1: add1, operand2: add2),
-            wrongAnswers: wrongAnswers(operand1: add1, operand2: add2))
-    }
 }
 
-class MinusData: MathPongGameData, MathPongGameWithOperandsData {
+class MinusProblems: ProblemGenerator, ProblemFromOperands {
+    let smallestOperand = 0
+    let biggestOperand = 10
+
+    func question(operand1: Int, operand2: Int) -> String {
+        return "\(operand1 + operand2) - \(operand2)"
+    }
 
     func correctAnswer(operand1: Int, operand2: Int) -> String {
         return "\(operand1)"
@@ -71,20 +76,15 @@ class MinusData: MathPongGameData, MathPongGameWithOperandsData {
         wrongAnswers.removeAll { "\(operand1)" == $0 }
         return Set(wrongAnswers)
     }
-
-    func getNextProblem() -> MathPongProblem {
-        let add1 = GKRandomSource.sharedRandom().nextInt(upperBound: 11)
-        let add2 = GKRandomSource.sharedRandom().nextInt(upperBound: 11)
-
-        let sum = add1 + add2
-
-        return MathPongProblem(question: "\(sum) - \(add2)",
-            answer: correctAnswer(operand1: add1, operand2: add2),
-            wrongAnswers: wrongAnswers(operand1: add1, operand2: add2))
-    }
 }
 
-class MultiplicationData: MathPongGameData, MathPongGameWithOperandsData {
+class MultiplicationProblems: ProblemGenerator, ProblemFromOperands {
+    let smallestOperand = 2
+    let biggestOperand = 12
+
+    func question(operand1: Int, operand2: Int) -> String {
+        return "\(operand1) × \(operand2)"
+    }
 
     func correctAnswer(operand1: Int, operand2: Int) -> String {
         return "\(operand1 * operand2)"
@@ -105,18 +105,15 @@ class MultiplicationData: MathPongGameData, MathPongGameWithOperandsData {
 
         return Set(wrongAnswers)
     }
-
-    func getNextProblem() -> MathPongProblem {
-        let mult1 = GKRandomSource.sharedRandom().nextInt(upperBound: 11) + 2
-        let mult2 = GKRandomSource.sharedRandom().nextInt(upperBound: 11) + 2
-
-        return MathPongProblem(question: "\(mult1) × \(mult2)",
-            answer: correctAnswer(operand1: mult1, operand2: mult2),
-            wrongAnswers: wrongAnswers(operand1: mult1, operand2: mult2))
-    }
 }
 
-class DivisionData: MathPongGameData, MathPongGameWithOperandsData {
+class DivisionProblems: ProblemGenerator, ProblemFromOperands {
+    let smallestOperand = 2
+    let biggestOperand = 12
+
+    func question(operand1: Int, operand2: Int) -> String {
+        return "\(operand1 * operand2) ÷ \(operand2)"
+    }
 
     func correctAnswer(operand1: Int, operand2: Int) -> String {
         return "\(operand1)"
@@ -132,15 +129,5 @@ class DivisionData: MathPongGameData, MathPongGameWithOperandsData {
 
         wrongAnswers.removeAll { "\(operand1)" == $0 }
         return Set(wrongAnswers)
-    }
-
-    func getNextProblem() -> MathPongProblem {
-        let mult1 = GKRandomSource.sharedRandom().nextInt(upperBound: 11) + 2
-        let mult2 = GKRandomSource.sharedRandom().nextInt(upperBound: 11) + 2
-
-        let product = mult1 * mult2
-        return MathPongProblem(question: "\(product) ÷ \(mult2)",
-            answer: correctAnswer(operand1: mult1, operand2: mult2),
-            wrongAnswers: wrongAnswers(operand1: mult1, operand2: mult2))
     }
 }
