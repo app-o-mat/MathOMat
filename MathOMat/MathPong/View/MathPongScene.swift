@@ -20,6 +20,8 @@ class MathPongScene: SKScene {
     var themeButton: ColorButtonNode?
     var resetButton: ColorButtonNode?
 
+    var playerButtons = [ColorButtonNode]()
+
     var opButtons = [ColorButtonNode]()
     var currentOp: MathOperator = MathOperator.add {
         didSet {
@@ -36,6 +38,12 @@ class MathPongScene: SKScene {
     }
 
     var currentPlayer = 0
+    var numberOfPlayers = 2 {
+        didSet {
+            UserDefaults.standard.set(numberOfPlayers, forKey: Constants.settingKey.numberOfPlayers)
+        }
+    }
+
     let players = [
         MathPongPlayer(problemRotation: 0, position: .bottom),
         MathPongPlayer(problemRotation: .pi, position: .top)]
@@ -56,7 +64,8 @@ class MathPongScene: SKScene {
         static let sideInset: CGFloat = 5
         static let settingKey = (
             backgroundIndex: "math-pong.settingKey.backgroundIndex",
-            currentOpIndex: "math-pong.settingKey.currentOpIndex")
+            currentOpIndex: "math-pong.settingKey.currentOpIndex",
+            numberOfPlayers: "math-pong.settingKey.numberOfPlayers")
         static let smallButtonSize = CGSize(width: 64, height: 64)
     }
 
@@ -72,10 +81,14 @@ class MathPongScene: SKScene {
 
     override init(size: CGSize) {
         self.backgroundIndex = UserDefaults.standard.integer(forKey: Constants.settingKey.backgroundIndex)
+
         let opIndex = UserDefaults.standard.integer(forKey: Constants.settingKey.currentOpIndex)
         self.currentOp = MathOperator.at(index: opIndex)
-
         self.currentProblem = currentOp.getNextProblem()
+
+        let storedNumberOfPlayers = UserDefaults.standard.integer(forKey: Constants.settingKey.numberOfPlayers)
+        self.numberOfPlayers = (storedNumberOfPlayers > 0) ? storedNumberOfPlayers : 2
+
         super.init(size: size)
 
         self.physicsWorld.contactDelegate = self
@@ -124,6 +137,7 @@ class MathPongScene: SKScene {
         addStartButton()
         addThemeButton()
         addOperatorButtons()
+        addPlayerButtons()
     }
 
     func createGameBoard() {
@@ -148,6 +162,7 @@ class MathPongScene: SKScene {
         self.resetButton?.removeFromParent()
         self.resetButton = nil
         removeOperatorButtons()
+        removePlayerButtons()
     }
 
     func addStartButton() {
@@ -170,7 +185,7 @@ class MathPongScene: SKScene {
         self.themeButton = button
         addChild(button)
         button.texture = SKTexture(imageNamed: "theme-button")
-        button.position = CGPoint(x: self.size.width / 2 + 96 + 10, y: self.size.height / 2)
+        button.position = CGPoint(x: self.size.width / 2 + 96 + 10, y: self.size.height / 2 + 32 + 64 + 15)
         button.onTap = { [weak self] button in
             guard let sself = self else { return }
             sself.backgroundIndex =  (sself.backgroundIndex + 1) % AppColor.boardBackground.count
@@ -224,6 +239,42 @@ class MathPongScene: SKScene {
             sself.currentProblem = sself.currentOp.getNextProblem()
         }
         return button
+    }
+
+    func addPlayerButtons() {
+        var startPos = CGPoint(x: self.size.width / 2 + 64 + 10 + 32,
+                               y: self.size.height / 2  - 5 - 32)
+        for (i, player) in ["1p", "2p"].enumerated() {
+            self.playerButtons.append(
+                addPlayerButton(name: player, position: startPos, on: numberOfPlayers == (i+1)))
+            startPos.y -= 64 + 5
+        }
+    }
+
+    func addPlayerButton(name: String, position: CGPoint, on: Bool) -> ColorButtonNode {
+        let button = ColorButtonNode(
+            color: AppColor.imageButtonBackground,
+            size: Constants.smallButtonSize)
+        addChild(button)
+        button.texture = SKTexture(imageNamed: "\(name)-button-\(on ? "on" : "off")")
+        button.position = position
+        button.name = name
+        button.onTap = { [weak self] button in
+            guard let sself = self, let name = button.name else { return }
+            sself.numberOfPlayers = Int(String(name.prefix(1))) ?? 1
+            sself.resetPlayerButtons()
+        }
+        return button
+    }
+
+    func resetPlayerButtons() {
+        removePlayerButtons()
+        addPlayerButtons()
+    }
+
+    func removePlayerButtons() {
+        self.playerButtons.forEach { $0.removeFromParent() }
+        self.playerButtons = []
     }
 
     func onStartTapped() {
