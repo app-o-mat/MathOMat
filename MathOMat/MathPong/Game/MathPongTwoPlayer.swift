@@ -10,7 +10,7 @@ import Foundation
 import GameplayKit
 import SpriteKit
 
-class MathPongTwoPlayer: MathPongGameLogic {
+class MathPongTwoPlayer: MathPongGameLogic, GameLogicPlayers {
     var scoreNodes = [SKLabelNode(), SKLabelNode()]
 
     let players = [
@@ -23,6 +23,10 @@ class MathPongTwoPlayer: MathPongGameLogic {
         self.players[1].score = 0
         self.scoreNodes[0].text = "0"
         self.scoreNodes[1].text = "0"
+    }
+
+    override func getPlayers() -> GameLogicPlayers? {
+        return self
     }
 
     override func addBoardNodes() {
@@ -62,35 +66,6 @@ class MathPongTwoPlayer: MathPongGameLogic {
         add(node: score, to: scene)
     }
 
-    override func removeButtons() {
-        super.removeButtons()
-        self.players.forEach { $0.removeButtons() }
-    }
-
-    override func createButtons() {
-        super.createButtons()
-        guard let scene = self.scene else { return }
-
-        removeButtons()
-        let buttons =
-            self.players[currentPlayer].addButtons(scene: scene, problem: currentProblem, lineOffset: lineOffset())
-
-        buttons[0].onTap = { [weak self] button in
-            guard self?.delegate?.gameState == .running else { return }
-            self?.currentPlayerHits()
-        }
-
-        buttons[1].onTap = { [weak self] button in
-            guard self?.delegate?.gameState == .running else { return }
-            self?.currentPlayerMisses()
-        }
-
-        buttons[2].onTap = { [weak self] button in
-            guard self?.delegate?.gameState == .running else { return }
-            self?.currentPlayerMisses()
-        }
-    }
-
     func currentPlayerHits() {
         guard let scene = self.scene else { return }
 
@@ -115,7 +90,7 @@ class MathPongTwoPlayer: MathPongGameLogic {
         guard self.players[otherPlayer].score < 7 else { return gameOver() }
 
         self.problemNode?.physicsBody = nil
-        self.problemNode?.position = CGPoint(x: scene.size.width / 2, y: scene.size.height / 2)
+        self.problemNode?.position = initialPosition(scene: scene)
 
         self.currentProblem = self.currentOp.getNextProblem()
     }

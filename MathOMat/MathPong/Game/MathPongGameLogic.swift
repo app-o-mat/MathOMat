@@ -43,6 +43,10 @@ class MathPongGameLogic: NSObject, GameLogic {
         super.init()
     }
 
+    func getPlayers() -> GameLogicPlayers? {
+        return nil
+    }
+
     func reset() {
     }
 
@@ -96,7 +100,7 @@ class MathPongGameLogic: NSObject, GameLogic {
         add(node: problemNode, to: scene)
 
         problemNode.name = Constants.problemName
-        problemNode.position = CGPoint(x: scene.size.width / 2, y: scene.size.height / 2)
+        problemNode.position = initialPosition(scene: scene)
         add(node: label, to: problemNode)
 
         didSetCurrentProblem()
@@ -150,16 +154,12 @@ class MathPongGameLogic: NSObject, GameLogic {
         return physicsBody
     }
 
+    func initialPosition(scene: SKScene) -> CGPoint {
+        return CGPoint(x: scene.size.width / 2, y: scene.size.height / 2)
+    }
+
     func initialVelocity(scene: SKScene) -> CGVector {
         return CGVector(dx: 0, dy: 0)
-    }
-
-    func removeButtons() {
-
-    }
-
-    func createButtons() {
-
     }
 
     func addScoreNode(playerIndex: Int, yPosition: CGFloat) {
@@ -202,6 +202,35 @@ class MathPongGameLogic: NSObject, GameLogic {
         add(node: guide, to: scene)
     }
 
+    func removeButtons() {
+        getPlayers()?.players.forEach { $0.removeButtons() }
+    }
+
+    func createButtons() {
+        guard let scene = self.scene else { return }
+
+        removeButtons()
+        guard
+            let buttons = getPlayers()?.players[currentPlayer]
+                .addButtons(scene: scene, problem: currentProblem, lineOffset: lineOffset())
+        else { return }
+
+        buttons[0].onTap = { [weak self] button in
+            guard self?.delegate?.gameState == .running else { return }
+            self?.getPlayers()?.currentPlayerHits()
+        }
+
+        buttons[1].onTap = { [weak self] button in
+            guard self?.delegate?.gameState == .running else { return }
+            self?.getPlayers()?.currentPlayerMisses()
+        }
+
+        buttons[2].onTap = { [weak self] button in
+            guard self?.delegate?.gameState == .running else { return }
+            self?.getPlayers()?.currentPlayerMisses()
+        }
+    }
+
     func lineOffset() -> CGFloat {
         guard let scene = self.scene, let view = scene.view else { return 0.0 }
 
@@ -218,7 +247,7 @@ class MathPongGameLogic: NSObject, GameLogic {
     }
 }
 
-extension MathPongTwoPlayer {
+extension MathPongGameLogic {
 
     private func playerDidMiss(_ contact: SKPhysicsContact, playerIndex: Int) -> Bool {
         return node(named: Constants.playerLineName[playerIndex], contact: contact) != nil
@@ -228,7 +257,7 @@ extension MathPongTwoPlayer {
     func didBegin(_ contact: SKPhysicsContact) {
         guard node(named: Constants.problemName, contact: contact) != nil else { return }
         if playerDidMiss(contact, playerIndex: currentPlayer) {
-            currentPlayerMisses()
+            self.getPlayers()?.currentPlayerMisses()
         } else if node(named: Constants.buttonLineName[currentPlayer], contact: contact) != nil {
             createButtons()
         }

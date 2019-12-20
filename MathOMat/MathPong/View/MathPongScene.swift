@@ -37,6 +37,13 @@ protocol GameLogicDelegate: class {
     func scene() -> SKScene
 }
 
+protocol GameLogicPlayers {
+    var players: [MathPongPlayer] { get }
+
+    func currentPlayerHits()
+    func currentPlayerMisses()
+}
+
 protocol GameLogic: SKPhysicsContactDelegate {
     var delegate: GameLogicDelegate? { get set }
     var currentOp: MathOperator { get set }
@@ -46,6 +53,7 @@ protocol GameLogic: SKPhysicsContactDelegate {
     func run()
     func gameOver()
     func removeAllNodes()
+    func getPlayers() -> GameLogicPlayers?
 }
 
 extension GameLogic {
@@ -115,6 +123,7 @@ class MathPongScene: SKScene {
     private func didSetCurrentOp() {
         UserDefaults.standard.set(currentOp.index(), forKey: Constants.settingKey.currentOpIndex)
         resetOperatorButtons()
+        self.gameLogic.currentOp = self.currentOp
     }
 
     private func didSetGameLogic() {
