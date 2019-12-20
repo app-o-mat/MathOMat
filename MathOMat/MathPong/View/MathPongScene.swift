@@ -276,7 +276,7 @@ class MathPongScene: SKScene {
         for (i, player) in ["1p", "2p"].enumerated() {
             self.playerButtons.append(
                 addPlayerButton(name: player, position: startPos, on: numberOfPlayers == (i+1)))
-            startPos.y -= 64 + 5
+            startPos.y -= 64 + 10
         }
     }
 
