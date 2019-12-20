@@ -1,9 +1,10 @@
-Math-o-Mat is a two-player iOS game that helps you practice arithmetic.
+Math-o-Mat is an iOS game that helps you practice arithmetic.
 
 Math-o-Mat is like Ping Pong, except instead of a ball, you will have to hit back arithmetic problems.
 
 Features:
 
-* Choose to practice addition, subtraction, multiplication or division. 
+* Play in one or two player mode
+* Practice addition, subtraction, multiplication, or division
 * Change the background color
 * Pause and resume
