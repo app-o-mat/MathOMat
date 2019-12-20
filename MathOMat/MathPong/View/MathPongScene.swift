@@ -9,11 +9,50 @@
 import SpriteKit
 import GameplayKit
 
-class MathPongScene: SKScene {
-    let gamePhysics = GamePhysics()
+enum Constants {
+    static let problemName = "problem"
+    static let playerLineName = ["player1line", "player2line"]
+    static let buttonLineName = ["button1line", "button2line"]
 
-    var problemNode: SKNode?
-    var scoreNodes = [SKLabelNode(), SKLabelNode()]
+    static let fontName = "Courier"
+
+    static let sideInset: CGFloat = 5
+    static let settingKey = (
+        backgroundIndex: "math-pong.settingKey.backgroundIndex",
+        currentOpIndex: "math-pong.settingKey.currentOpIndex",
+        numberOfPlayers: "math-pong.settingKey.numberOfPlayers")
+    static let smallButtonSize = CGSize(width: 64, height: 64)
+}
+
+enum GameState {
+    case waitingToStart
+    case running
+    case paused
+}
+
+protocol GameLogicDelegate: class {
+    var gameState: GameState { get }
+
+    func didGameOver()
+    func scene() -> SKScene
+}
+
+protocol GameLogic: SKPhysicsContactDelegate {
+    var delegate: GameLogicDelegate? { get set }
+    var currentOp: MathOperator { get set }
+
+    func reset()
+    func addBoardNodes()
+    func run()
+    func gameOver()
+}
+
+extension GameLogic {
+}
+
+class MathPongScene: SKScene {
+
+    var gameLogic: GameLogic = MathPongTwoPlayer()
 
     var startButton: ColorButtonNode?
     var pauseButton: ColorButtonNode?
@@ -25,8 +64,7 @@ class MathPongScene: SKScene {
     var opButtons = [ColorButtonNode]()
     var currentOp: MathOperator = MathOperator.add {
         didSet {
-            UserDefaults.standard.set(currentOp.index(), forKey: Constants.settingKey.currentOpIndex)
-            resetOperatorButtons()
+            didSetCurrentOp()
         }
     }
 
@@ -37,61 +75,29 @@ class MathPongScene: SKScene {
         }
     }
 
-    var currentPlayer = 0
     var numberOfPlayers = 2 {
         didSet {
             UserDefaults.standard.set(numberOfPlayers, forKey: Constants.settingKey.numberOfPlayers)
         }
     }
 
-    let players = [
-        MathPongPlayer(problemRotation: 0, position: .bottom),
-        MathPongPlayer(problemRotation: .pi, position: .top)]
-
-    var currentProblem: Problem {
-        didSet {
-            didSetCurrentProblem()
-        }
-    }
-
-    enum Constants {
-        static let problemName = "problem"
-        static let playerLineName = ["player1line", "player2line"]
-        static let buttonLineName = ["button1line", "button2line"]
-
-        static let fontName = "Courier"
-
-        static let sideInset: CGFloat = 5
-        static let settingKey = (
-            backgroundIndex: "math-pong.settingKey.backgroundIndex",
-            currentOpIndex: "math-pong.settingKey.currentOpIndex",
-            numberOfPlayers: "math-pong.settingKey.numberOfPlayers")
-        static let smallButtonSize = CGSize(width: 64, height: 64)
-    }
-
-    enum GameState {
-        case waitingToStart
-        case running
-        case paused
-    }
     var gameState = GameState.waitingToStart
-
-    let winSoundAction = SKAction.playSoundFileNamed("win", waitForCompletion: false)
-    let loseSoundAction = SKAction.playSoundFileNamed("lose", waitForCompletion: false)
 
     override init(size: CGSize) {
         self.backgroundIndex = UserDefaults.standard.integer(forKey: Constants.settingKey.backgroundIndex)
 
         let opIndex = UserDefaults.standard.integer(forKey: Constants.settingKey.currentOpIndex)
         self.currentOp = MathOperator.at(index: opIndex)
-        self.currentProblem = currentOp.getNextProblem()
 
         let storedNumberOfPlayers = UserDefaults.standard.integer(forKey: Constants.settingKey.numberOfPlayers)
         self.numberOfPlayers = (storedNumberOfPlayers > 0) ? storedNumberOfPlayers : 2
 
         super.init(size: size)
 
-        self.physicsWorld.contactDelegate = self
+        self.gameLogic.delegate = self
+        didSetCurrentOp()
+
+        self.physicsWorld.contactDelegate = self.gameLogic
         self.physicsWorld.gravity = CGVector(dx: 0, dy: 0)
 
         self.backgroundColor = AppColor.boardBackground[backgroundIndex]
@@ -101,6 +107,12 @@ class MathPongScene: SKScene {
 
     @available(*, unavailable)
     required init?(coder aDecoder: NSCoder) { fatalError("init(coder:) has not been implemented") }
+
+    private func didSetCurrentOp() {
+        UserDefaults.standard.set(currentOp.index(), forKey: Constants.settingKey.currentOpIndex)
+        resetOperatorButtons()
+        self.gameLogic.currentOp = self.currentOp
+    }
 
     // App Events
     private func subscribeToAppEvents() {
@@ -141,15 +153,7 @@ class MathPongScene: SKScene {
     }
 
     func createGameBoard() {
-        createPlayerLine(yPosition: lineOffset(), playerIndex: 0)
-        createPlayerLine(yPosition: self.size.height - lineOffset(), playerIndex: 1)
-
-        let guidePos = self.size.height / 3.0
-        createShowButtonsLine(yPosition: guidePos, playerIndex: 0)
-        createShowButtonsLine(yPosition: self.size.height - guidePos, playerIndex: 1)
-
-        createGameBoundary(xPosition: Constants.sideInset)
-        createGameBoundary(xPosition: self.size.width - Constants.sideInset)
+        gameLogic.addBoardNodes()
     }
 
     func removeControlButtons() {
@@ -236,7 +240,6 @@ class MathPongScene: SKScene {
         button.onTap = { [weak self] button in
             guard let sself = self else { return }
             sself.currentOp = MathOperator.named(name: button.name) ?? MathOperator.add
-            sself.currentProblem = sself.currentOp.getNextProblem()
         }
         return button
     }
@@ -310,192 +313,14 @@ class MathPongScene: SKScene {
     }
 
     func createRunningGameBoard() {
-        resetScore()
-        createProblem()
+        gameLogic.reset()
+        gameLogic.run()
         self.gameState = .running
-    }
-
-    func resetScore() {
-        self.players[0].score = 0
-        self.players[1].score = 0
-        self.scoreNodes[0].text = "0"
-        self.scoreNodes[1].text = "0"
-    }
-
-    func createPlayerLine(yPosition: CGFloat, playerIndex: Int) {
-        let path = CGMutablePath()
-        path.move(to: CGPoint(x: Constants.sideInset, y: yPosition))
-        path.addLine(to: CGPoint(x: self.size.width - Constants.sideInset, y: yPosition))
-        let boundary = SKShapeNode(path: path)
-        boundary.lineWidth = 5
-        boundary.strokeColor = AppColor.boundaryColor
-        boundary.name = Constants.playerLineName[playerIndex]
-
-        gamePhysics.setupAsBoundary(node: boundary, path: path)
-        gamePhysics.setupAsGuide(node: boundary)
-
-        addChild(boundary)
-
-        let score = self.scoreNodes[playerIndex]
-        score.text = "\(self.players[playerIndex].score)"
-        score.fontName = Constants.fontName
-        score.fontSize *= 2
-        score.position = CGPoint(x: score.fontSize + 5, y: yPosition - 50 * CGFloat(playerIndex * 2 - 1))
-        score.zRotation = .pi / 2.0
-        addChild(score)
-    }
-
-    func createShowButtonsLine(yPosition: CGFloat, playerIndex: Int) {
-        let path = CGMutablePath()
-        path.move(to: CGPoint(x: Constants.sideInset, y: yPosition))
-        path.addLine(to: CGPoint(x: self.size.width - Constants.sideInset, y: yPosition))
-
-        let guide = SKShapeNode(path: path)
-        guide.lineWidth = 1
-        guide.strokeColor = AppColor.guideColor
-        guide.name = Constants.buttonLineName[playerIndex]
-
-        gamePhysics.setupAsBoundary(node: guide, path: path)
-        gamePhysics.setupAsGuide(node: guide)
-
-        addChild(guide)
-    }
-
-    func createProblem() {
-        let label = SKLabelNode(text: self.currentProblem.question)
-        label.fontSize = self.size.height / 20
-        label.fontName = Constants.fontName
-
-        let problemSize = label.frame.size
-        let problemNode = SKSpriteNode(color: AppColor.debugColor, size: problemSize)
-        self.problemNode = problemNode
-        addChild(problemNode)
-
-        problemNode.name = Constants.problemName
-        problemNode.position = CGPoint(x: self.size.width / 2, y: self.size.height / 2)
-        problemNode.addChild(label)
-
-        didSetCurrentProblem()
-    }
-
-    func problemPhysicsBody(size: CGSize) -> SKPhysicsBody {
-        let physicsBody = SKPhysicsBody(rectangleOf: size)
-
-        physicsBody.usesPreciseCollisionDetection = true
-        physicsBody.linearDamping = 0.0
-        physicsBody.contactTestBitMask = GamePhysics.categoryGuide | GamePhysics.categoryObject
-        physicsBody.allowsRotation = false
-
-        gamePhysics.setupAsObject(physicsBody: physicsBody)
-        physicsBody.velocity = initialVelocity()
-
-        return physicsBody
-    }
-
-    func removeButtons() {
-        self.players.forEach { $0.removeButtons() }
-    }
-
-    func createButtons() {
-        removeButtons()
-        let buttons =
-            self.players[currentPlayer].addButtons(scene: self, problem: currentProblem, lineOffset: lineOffset())
-
-        buttons[0].onTap = { [weak self] button in
-            guard self?.gameState == .running else { return }
-            self?.currentPlayerHits()
-        }
-
-        buttons[1].onTap = { [weak self] button in
-            guard self?.gameState == .running else { return }
-            self?.currentPlayerMisses()
-        }
-
-        buttons[2].onTap = { [weak self] button in
-            guard self?.gameState == .running else { return }
-            self?.currentPlayerMisses()
-        }
-    }
-
-    func didSetCurrentProblem() {
-        guard
-            let problemNode = self.problemNode as? SKSpriteNode,
-            let label = problemNode.children[0] as? SKLabelNode
-        else { return }
-
-        label.text = currentProblem.question
-        let problemSize = label.frame.size
-        let rotation = self.players[self.currentPlayer].problemRotation
-        label.zRotation = rotation
-        if rotation == 0.0 {
-            label.position = CGPoint(x: 0, y: -problemSize.height / 2.0)
-        } else {
-            label.position = CGPoint(x: 0, y: problemSize.height / 2.0)
-        }
-
-        problemNode.size = problemSize
-        let newPhysicsBody = problemPhysicsBody(size: problemSize)
-        if let physicsBody = problemNode.physicsBody {
-            newPhysicsBody.velocity = physicsBody.velocity
-        }
-        problemNode.physicsBody = newPhysicsBody
-        removeButtons()
-    }
-
-    func createGameBoundary(xPosition: CGFloat) {
-        let path = CGMutablePath()
-        path.move(to: CGPoint(x: xPosition, y: 0))
-        path.addLine(to: CGPoint(x: xPosition, y: self.size.height))
-        let boundary = SKShapeNode(path: path)
-        boundary.lineWidth = 2
-        boundary.strokeColor = AppColor.boundaryColor
-
-        gamePhysics.setupAsBoundary(node: boundary, path: path)
-        gamePhysics.setupAsObject(node: boundary)
-
-        addChild(boundary)
-    }
-
-    func currentPlayerHits() {
-        guard let velocity = self.problemNode?.physicsBody?.velocity else { return }
-        self.run(self.winSoundAction)
-
-        self.currentPlayer = 1 - self.currentPlayer
-        self.problemNode?.physicsBody?.velocity = CGVector(dx: velocity.dx * 1.1, dy: -velocity.dy * 1.1)
-
-        self.currentProblem = self.currentOp.getNextProblem()
-    }
-
-    func currentPlayerMisses() {
-        self.run(self.loseSoundAction)
-
-        let otherPlayer = 1 - currentPlayer
-        self.players[otherPlayer].score += 1
-        scoreNodes[otherPlayer].text = "\(self.players[otherPlayer].score)"
-
-        guard self.players[otherPlayer].score < 7 else { return gameOver() }
-
-        self.problemNode?.physicsBody = nil
-        self.problemNode?.position = CGPoint(x: self.size.width / 2, y: self.size.height / 2)
-
-        self.currentProblem = self.currentOp.getNextProblem()
-    }
-
-    func initialVelocity() -> CGVector {
-        let dxy: CGFloat = self.size.height * 0.1
-        return CGVector(dx: dxy * 0.5, dy: dxy * CGFloat(self.currentPlayer * 2 - 1))
-    }
-
-    func gameOver() {
-        self.problemNode?.removeFromParent()
-        self.problemNode = nil
-        addWaitingToStartButtons()
-        self.gameState = .waitingToStart
     }
 
     func reset() {
         unPauseGame()
-        gameOver()
+        gameLogic.gameOver()
     }
 
     func pauseGame() {
@@ -509,34 +334,13 @@ class MathPongScene: SKScene {
     }
 }
 
-extension MathPongScene: SKPhysicsContactDelegate {
-
-    func node(named name: String, contact: SKPhysicsContact) -> SKNode? {
-        if contact.bodyA.node?.name ?? "" == name { return contact.bodyA.node }
-        if contact.bodyB.node?.name ?? "" == name { return contact.bodyB.node }
-        return nil
+extension MathPongScene: GameLogicDelegate {
+    func didGameOver() {
+        addWaitingToStartButtons()
+        self.gameState = .waitingToStart
     }
 
-    private func playerDidMiss(_ contact: SKPhysicsContact, playerIndex: Int) -> Bool {
-        return node(named: Constants.playerLineName[playerIndex], contact: contact) != nil
-            && currentPlayer == playerIndex
-    }
-
-    func didBegin(_ contact: SKPhysicsContact) {
-        guard node(named: Constants.problemName, contact: contact) != nil else { return }
-        if playerDidMiss(contact, playerIndex: currentPlayer) {
-            currentPlayerMisses()
-        } else if node(named: Constants.buttonLineName[currentPlayer], contact: contact) != nil {
-            createButtons()
-        }
-    }
-
-    func lineOffset() -> CGFloat {
-        guard let view = self.view else { return 0.0 }
-
-        let size = view.frame.size
-        let maxInset = max(view.safeAreaInsets.top, view.safeAreaInsets.bottom)
-
-        return size.height / 10 + maxInset
+    func scene() -> SKScene {
+        return self
     }
 }

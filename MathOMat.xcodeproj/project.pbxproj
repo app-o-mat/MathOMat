@@ -22,6 +22,7 @@
 		9A3F95A9239D451400A349D2 /* ProblemGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A3F95A8239D451400A349D2 /* ProblemGenerator.swift */; };
 		9A952DE7239DAF60009406D6 /* ColorButtonNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A952DE6239DAF60009406D6 /* ColorButtonNode.swift */; };
 		9A952DE9239DD44A009406D6 /* MathPongPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A952DE8239DD44A009406D6 /* MathPongPlayer.swift */; };
+		9AB68A1C23AC61F40036D926 /* MathPongTwoPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AB68A1B23AC61F40036D926 /* MathPongTwoPlayer.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -54,6 +55,7 @@
 		9A3F95A8239D451400A349D2 /* ProblemGenerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProblemGenerator.swift; sourceTree = "<group>"; };
 		9A952DE6239DAF60009406D6 /* ColorButtonNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorButtonNode.swift; sourceTree = "<group>"; };
 		9A952DE8239DD44A009406D6 /* MathPongPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MathPongPlayer.swift; sourceTree = "<group>"; };
+		9AB68A1B23AC61F40036D926 /* MathPongTwoPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MathPongTwoPlayer.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -159,6 +161,7 @@
 			children = (
 				9A3F95A8239D451400A349D2 /* ProblemGenerator.swift */,
 				9A1FD00E23A6606D00150B17 /* MathOperatorProblems.swift */,
+				9AB68A1B23AC61F40036D926 /* MathPongTwoPlayer.swift */,
 			);
 			path = Game;
 			sourceTree = "<group>";
@@ -291,6 +294,7 @@
 				9A952DE9239DD44A009406D6 /* MathPongPlayer.swift in Sources */,
 				9A1FD00F23A6606D00150B17 /* MathOperatorProblems.swift in Sources */,
 				9A1FD01123AAEBD500150B17 /* GamePhysics.swift in Sources */,
+				9AB68A1C23AC61F40036D926 /* MathPongTwoPlayer.swift in Sources */,
 				9A952DE7239DAF60009406D6 /* ColorButtonNode.swift in Sources */,
 				9A3F9585239D416700A349D2 /* MathPongScene.swift in Sources */,
 				9A0A4BEF239EC7E00062F5BE /* Colors.swift in Sources */,
