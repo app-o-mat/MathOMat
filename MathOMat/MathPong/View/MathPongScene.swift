@@ -45,6 +45,7 @@ protocol GameLogic: SKPhysicsContactDelegate {
     func addBoardNodes()
     func run()
     func gameOver()
+    func removeAllNodes()
 }
 
 extension GameLogic {
@@ -52,7 +53,11 @@ extension GameLogic {
 
 class MathPongScene: SKScene {
 
-    var gameLogic: GameLogic = MathPongTwoPlayer()
+    var gameLogic: GameLogic {
+        didSet {
+            didSetGameLogic()
+        }
+    }
 
     var startButton: ColorButtonNode?
     var pauseButton: ColorButtonNode?
@@ -77,7 +82,7 @@ class MathPongScene: SKScene {
 
     var numberOfPlayers = 2 {
         didSet {
-            UserDefaults.standard.set(numberOfPlayers, forKey: Constants.settingKey.numberOfPlayers)
+            didSetNumberOfPlayer()
         }
     }
 
@@ -91,15 +96,14 @@ class MathPongScene: SKScene {
 
         let storedNumberOfPlayers = UserDefaults.standard.integer(forKey: Constants.settingKey.numberOfPlayers)
         self.numberOfPlayers = (storedNumberOfPlayers > 0) ? storedNumberOfPlayers : 2
+        self.gameLogic = (self.numberOfPlayers == 1) ? MathPongOnePlayer() : MathPongTwoPlayer()
 
         super.init(size: size)
 
-        self.gameLogic.delegate = self
         didSetCurrentOp()
+        didSetGameLogic()
 
-        self.physicsWorld.contactDelegate = self.gameLogic
         self.physicsWorld.gravity = CGVector(dx: 0, dy: 0)
-
         self.backgroundColor = AppColor.boardBackground[backgroundIndex]
 
         subscribeToAppEvents()
@@ -111,7 +115,20 @@ class MathPongScene: SKScene {
     private func didSetCurrentOp() {
         UserDefaults.standard.set(currentOp.index(), forKey: Constants.settingKey.currentOpIndex)
         resetOperatorButtons()
+    }
+
+    private func didSetGameLogic() {
+        self.gameLogic.delegate = self
         self.gameLogic.currentOp = self.currentOp
+        self.physicsWorld.contactDelegate = self.gameLogic
+    }
+
+    private func didSetNumberOfPlayer() {
+        UserDefaults.standard.set(numberOfPlayers, forKey: Constants.settingKey.numberOfPlayers)
+        resetPlayerButtons()
+        self.gameLogic.removeAllNodes()
+        self.gameLogic = (self.numberOfPlayers == 1) ? MathPongOnePlayer() : MathPongTwoPlayer()
+        createGameBoard()
     }
 
     // App Events
@@ -262,10 +279,9 @@ class MathPongScene: SKScene {
         button.texture = SKTexture(imageNamed: "\(name)-button-\(on ? "on" : "off")")
         button.position = position
         button.name = name
-        button.onTap = { [weak self] button in
-            guard let sself = self, let name = button.name else { return }
-            sself.numberOfPlayers = Int(String(name.prefix(1))) ?? 1
-            sself.resetPlayerButtons()
+        button.onTap = { [weak self] _ in
+            guard let numberOfPlayers = Int(String(name.prefix(1))) else { return }
+            self?.numberOfPlayers = numberOfPlayers
         }
         return button
     }
