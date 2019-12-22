@@ -1,6 +1,12 @@
 # os x finder
 .DS_Store
 
+#swift pm
+/.build
+/Packages
+xcuserdata/
+
+
 # xcode 3
 *.mode1v3
 *.pbxuser

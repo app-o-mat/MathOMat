@@ -3,15 +3,12 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 52;
 	objects = {
 
 /* Begin PBXBuildFile section */
 		9A0A4BEA239DE2400062F5BE /* win.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 9A0A4BE9239DE2400062F5BE /* win.mp3 */; };
 		9A0A4BEC239DE29A0062F5BE /* lose.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 9A0A4BEB239DE29A0062F5BE /* lose.mp3 */; };
-		9A0A4BEF239EC7E00062F5BE /* Colors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A0A4BEE239EC7E00062F5BE /* Colors.swift */; };
-		9A1FD00F23A6606D00150B17 /* MathOperatorProblems.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A1FD00E23A6606D00150B17 /* MathOperatorProblems.swift */; };
-		9A1FD01123AAEBD500150B17 /* GamePhysics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A1FD01023AAEBD500150B17 /* GamePhysics.swift */; };
 		9A3F957F239D416700A349D2 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A3F957E239D416700A349D2 /* AppDelegate.swift */; };
 		9A3F9585239D416700A349D2 /* MathPongScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A3F9584239D416700A349D2 /* MathPongScene.swift */; };
 		9A3F9587239D416700A349D2 /* MathPongSceneViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A3F9586239D416700A349D2 /* MathPongSceneViewController.swift */; };
@@ -19,12 +16,8 @@
 		9A3F958C239D416B00A349D2 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9A3F958B239D416B00A349D2 /* Assets.xcassets */; };
 		9A3F958F239D416B00A349D2 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9A3F958D239D416B00A349D2 /* LaunchScreen.storyboard */; };
 		9A3F959A239D416B00A349D2 /* MathOMatTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A3F9599239D416B00A349D2 /* MathOMatTests.swift */; };
-		9A3F95A9239D451400A349D2 /* ProblemGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A3F95A8239D451400A349D2 /* ProblemGenerator.swift */; };
-		9A952DE7239DAF60009406D6 /* ColorButtonNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A952DE6239DAF60009406D6 /* ColorButtonNode.swift */; };
-		9A952DE9239DD44A009406D6 /* MathPongPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A952DE8239DD44A009406D6 /* MathPongPlayer.swift */; };
-		9AB68A1C23AC61F40036D926 /* MathPongTwoPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AB68A1B23AC61F40036D926 /* MathPongTwoPlayer.swift */; };
-		9AB68A1E23ACE1BA0036D926 /* MathPongOnePlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AB68A1D23ACE1B90036D926 /* MathPongOnePlayer.swift */; };
-		9AB68A2023ACE1D70036D926 /* MathPongGameLogic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AB68A1F23ACE1D70036D926 /* MathPongGameLogic.swift */; };
+		9AD245FD23AE334400B9EA11 /* GameOMatKit in Frameworks */ = {isa = PBXBuildFile; productRef = 9AD245FC23AE334400B9EA11 /* GameOMatKit */; };
+		9AD245FF23AE930000B9EA11 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AD245FE23AE930000B9EA11 /* Constants.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -40,9 +33,6 @@
 /* Begin PBXFileReference section */
 		9A0A4BE9239DE2400062F5BE /* win.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = win.mp3; sourceTree = "<group>"; };
 		9A0A4BEB239DE29A0062F5BE /* lose.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = lose.mp3; sourceTree = "<group>"; };
-		9A0A4BEE239EC7E00062F5BE /* Colors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Colors.swift; sourceTree = "<group>"; };
-		9A1FD00E23A6606D00150B17 /* MathOperatorProblems.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MathOperatorProblems.swift; sourceTree = "<group>"; };
-		9A1FD01023AAEBD500150B17 /* GamePhysics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GamePhysics.swift; sourceTree = "<group>"; };
 		9A3F957B239D416700A349D2 /* MathOMat.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MathOMat.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9A3F957E239D416700A349D2 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		9A3F9584239D416700A349D2 /* MathPongScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MathPongScene.swift; sourceTree = "<group>"; };
@@ -54,12 +44,7 @@
 		9A3F9595239D416B00A349D2 /* MathOMatTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MathOMatTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		9A3F9599239D416B00A349D2 /* MathOMatTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MathOMatTests.swift; sourceTree = "<group>"; };
 		9A3F959B239D416B00A349D2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		9A3F95A8239D451400A349D2 /* ProblemGenerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProblemGenerator.swift; sourceTree = "<group>"; };
-		9A952DE6239DAF60009406D6 /* ColorButtonNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorButtonNode.swift; sourceTree = "<group>"; };
-		9A952DE8239DD44A009406D6 /* MathPongPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MathPongPlayer.swift; sourceTree = "<group>"; };
-		9AB68A1B23AC61F40036D926 /* MathPongTwoPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MathPongTwoPlayer.swift; sourceTree = "<group>"; };
-		9AB68A1D23ACE1B90036D926 /* MathPongOnePlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MathPongOnePlayer.swift; sourceTree = "<group>"; };
-		9AB68A1F23ACE1D70036D926 /* MathPongGameLogic.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MathPongGameLogic.swift; sourceTree = "<group>"; };
+		9AD245FE23AE930000B9EA11 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -67,6 +52,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9AD245FD23AE334400B9EA11 /* GameOMatKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -92,9 +78,7 @@
 		9A0A4BED239EC7980062F5BE /* Utilities */ = {
 			isa = PBXGroup;
 			children = (
-				9A952DE6239DAF60009406D6 /* ColorButtonNode.swift */,
-				9A1FD01023AAEBD500150B17 /* GamePhysics.swift */,
-				9A0A4BEE239EC7E00062F5BE /* Colors.swift */,
+				9AD245FE23AE930000B9EA11 /* Constants.swift */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -144,7 +128,6 @@
 		9A3F95A4239D428800A349D2 /* MathPong */ = {
 			isa = PBXGroup;
 			children = (
-				9A3F95A7239D44FF00A349D2 /* Game */,
 				9A3F95A6239D44F500A349D2 /* View */,
 			);
 			path = MathPong;
@@ -155,21 +138,8 @@
 			children = (
 				9A3F9584239D416700A349D2 /* MathPongScene.swift */,
 				9A3F9586239D416700A349D2 /* MathPongSceneViewController.swift */,
-				9A952DE8239DD44A009406D6 /* MathPongPlayer.swift */,
 			);
 			path = View;
-			sourceTree = "<group>";
-		};
-		9A3F95A7239D44FF00A349D2 /* Game */ = {
-			isa = PBXGroup;
-			children = (
-				9A3F95A8239D451400A349D2 /* ProblemGenerator.swift */,
-				9A1FD00E23A6606D00150B17 /* MathOperatorProblems.swift */,
-				9AB68A1B23AC61F40036D926 /* MathPongTwoPlayer.swift */,
-				9AB68A1D23ACE1B90036D926 /* MathPongOnePlayer.swift */,
-				9AB68A1F23ACE1D70036D926 /* MathPongGameLogic.swift */,
-			);
-			path = Game;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -189,6 +159,9 @@
 			dependencies = (
 			);
 			name = MathOMat;
+			packageProductDependencies = (
+				9AD245FC23AE334400B9EA11 /* GameOMatKit */,
+			);
 			productName = MathOMat;
 			productReference = 9A3F957B239D416700A349D2 /* MathOMat.app */;
 			productType = "com.apple.product-type.application";
@@ -239,6 +212,9 @@
 				Base,
 			);
 			mainGroup = 9A3F9572239D416700A349D2;
+			packageReferences = (
+				9AD245FB23AE334400B9EA11 /* XCRemoteSwiftPackageReference "GameOMatKit" */,
+			);
 			productRefGroup = 9A3F957C239D416700A349D2 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -297,18 +273,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				9A952DE9239DD44A009406D6 /* MathPongPlayer.swift in Sources */,
-				9A1FD00F23A6606D00150B17 /* MathOperatorProblems.swift in Sources */,
-				9A1FD01123AAEBD500150B17 /* GamePhysics.swift in Sources */,
-				9AB68A1C23AC61F40036D926 /* MathPongTwoPlayer.swift in Sources */,
-				9AB68A2023ACE1D70036D926 /* MathPongGameLogic.swift in Sources */,
-				9A952DE7239DAF60009406D6 /* ColorButtonNode.swift in Sources */,
 				9A3F9585239D416700A349D2 /* MathPongScene.swift in Sources */,
-				9A0A4BEF239EC7E00062F5BE /* Colors.swift in Sources */,
+				9AD245FF23AE930000B9EA11 /* Constants.swift in Sources */,
 				9A3F9587239D416700A349D2 /* MathPongSceneViewController.swift in Sources */,
 				9A3F957F239D416700A349D2 /* AppDelegate.swift in Sources */,
-				9AB68A1E23ACE1BA0036D926 /* MathPongOnePlayer.swift in Sources */,
-				9A3F95A9239D451400A349D2 /* ProblemGenerator.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -470,7 +438,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 7;
+				CURRENT_PROJECT_VERSION = 8;
 				DEVELOPMENT_TEAM = 85H8KB76TX;
 				INFOPLIST_FILE = MathOMat/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -491,7 +459,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 7;
+				CURRENT_PROJECT_VERSION = 8;
 				DEVELOPMENT_TEAM = 85H8KB76TX;
 				INFOPLIST_FILE = MathOMat/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -581,6 +549,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		9AD245FB23AE334400B9EA11 /* XCRemoteSwiftPackageReference "GameOMatKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "file:///Users/lou/project/GameOMatKit";
+			requirement = {
+				branch = master;
+				kind = branch;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		9AD245FC23AE334400B9EA11 /* GameOMatKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 9AD245FB23AE334400B9EA11 /* XCRemoteSwiftPackageReference "GameOMatKit" */;
+			productName = GameOMatKit;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 9A3F9573239D416700A349D2 /* Project object */;
 }
