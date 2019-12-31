@@ -52,11 +52,10 @@ class MathPongScene: GameScene {
     }
 
     func addOperatorButtons() {
-        var startPos = CGPoint(x: self.size.width / 2 - 96 - 10, y: self.size.height / 2 + 32 + 64 + 15)
-        for op in MathOperator.allCases {
+        for (i, op) in MathOperator.allCases.enumerated() {
+            let pos = super.buttonPosition(xGridOffset: -1.5 + CGFloat(i), yGridOffset: 1.5)
             self.opButtons.append(
-                addOperatorButton(opName: op.rawValue, position: startPos, on: currentOp == op))
-            startPos.y -= 64 + 10
+                addOperatorButton(opName: op.rawValue, position: pos, on: currentOp == op))
         }
     }
 
