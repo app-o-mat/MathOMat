@@ -32,3 +32,12 @@ lane :unit_tests do
   run_tests(scheme: "MathOMat")
 
 end
+
+lane :upload_binary do
+  upload_to_testflight(
+    username: "lfranco@greenwave-solutions.com",
+    ipa: "./build/app-store/Math-o-Mat.ipa",
+    team_id: "159005"
+  )
+
+end
