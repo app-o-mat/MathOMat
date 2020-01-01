@@ -24,8 +24,8 @@ class MathPongScene: GameScene {
         self.currentOp = MathOperator.at(index: opIndex)
 
         super.init(size: size, gameLogics:
-            [PongOnePlayer(generator: MathOperator.add.generator()),
-             PongTwoPlayer(generator: MathOperator.add.generator())])
+            [PongOnePlayerLogic(generator: MathOperator.add.generator()),
+             PongTwoPlayerLogic(generator: MathOperator.add.generator())])
 
         didSetCurrentOp()
     }
