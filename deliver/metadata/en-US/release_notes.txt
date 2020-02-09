@@ -1,10 +1,3 @@
-Two-player game:
+BUGFIX: Answer buttons work a lot better now on phones with home buttons.
 
-* Play to a score of 7, 14, or 21.
-
-One-player game 
-
-* Wrong guesses are allowed.
-* If you guess wrong the game speeds up even faster.
-* You can only pause three times a game.
-* The pause button disappears when the buttons appear.
+Big thanks to Asia and Reed, who reported this bug.
