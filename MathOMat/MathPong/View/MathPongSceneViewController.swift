@@ -24,7 +24,7 @@ class MathPongSceneViewController: UIViewController {
     }
 
     func viewDidAppearFirstTime() {
-        self.scene?.startGame()
+        self.scene?.startGame(view: self.view)
     }
 
     override func viewDidLoad() {
