@@ -53,7 +53,7 @@ class MathPongScene: GameScene {
 
     func addOperatorButtons() {
         for (i, op) in MathOperator.allCases.enumerated() {
-            let pos = super.buttonPosition(xGridOffset: -1.5 + CGFloat(i), yGridOffset: 1.5)
+            let pos = super.buttonPosition(xGridOffset: -1.5 + CGFloat(i), yGridOffset: -1.0)
             self.opButtons.append(
                 addOperatorButton(opName: op.rawValue, position: pos, on: currentOp == op))
         }
