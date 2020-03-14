@@ -74,6 +74,7 @@ class MathPongScene: GameScene {
             color: AppColor.imageButtonBackground,
             size: Style.smallButtonSize)
         addChild(button)
+        button.zPosition = Style.buttonZPosition
         button.texture = SKTexture(imageNamed: "\(opName)-button-\(on ? "on" : "off")")
         button.position = position
         button.name = opName
