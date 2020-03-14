@@ -1,3 +1,1 @@
-BUGFIX: Answer buttons work a lot better now on phones with home buttons.
-
-Big thanks to Asia and Reed, who reported this bug.
+Minor fixes and design improvements.

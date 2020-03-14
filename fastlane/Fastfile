@@ -53,3 +53,16 @@ lane :upload_metadata do
     metadata_path: "./deliver/metadata"
   )
 end
+
+lane :upload_screenshots do
+  deliver(
+    app_identifier: "com.app-o-mat.MathOMat",
+    username: "lfranco@greenwave-solutions.com",
+    team_id: "159005",
+    force: true,
+    skip_screenshots: false,
+    skip_metadata: true,
+    skip_binary_upload: true,
+    screenshots_path: "./deliver/screenshots"
+  )
+end
