@@ -3,10 +3,10 @@
     "pins": [
       {
         "package": "GameOMatKit",
-        "repositoryURL": "/Users/lou/project/GameOMatKit",
+        "repositoryURL": "https://github.com/app-o-mat/GameOMatKit",
         "state": {
-          "branch": "master",
-          "revision": "dc4097b52ca247dbfb1a5d23567a7f6d2e91701f",
+          "branch": "main",
+          "revision": "8e2b8c83519ff6806124f224ee73e354e2157bfc",
           "version": null
         }
       }
